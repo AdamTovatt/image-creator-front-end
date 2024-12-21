@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Font */
+  font-family: 'Lexend', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+
+  /* Colors from Figma */
+  --depth0: #1F1D2B;
+  --depth1: #252836;
+  --depth2: #313441;
+  --gray: #92949B;
+  --white: #FFFFFF;
+  --purple: #5D5D9C;
+  --positive: #22B07D;
+  --warning: #FFB74F;
+  --danger: #D44848;
+  --neutral: #32A7E2;
+
+  /* Text and background */
+  --background-color: var(--depth0);
+  --text-color: var(--white);
+  --input-bg-color: var(--depth1);
+  --placeholder-color: var(--gray);
+
+  /* Buttons */
+  --button-bg-color: var(--purple);
+  --button-hover-bg: var(--depth2);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: inherit;
+}
+
+h1 {
+  font-size: 3rem;
+  line-height: 1.1;
+  margin: 0;
+}
