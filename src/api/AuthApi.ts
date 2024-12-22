@@ -14,10 +14,12 @@ export async function generateMagicLink(
 
 export async function validateMagicLink(
     token: string
-): Promise<ApiResponse<ValidateMagicLinkResponse>> {
-    return await apiRequest({
-        method: "GET",
-        url: "/auth/validate-magic-link",
-        params: { token }
+  ): Promise<ApiResponse<ValidateMagicLinkResponse>> {
+    const response = await apiRequest<ValidateMagicLinkResponse>({
+      method: "GET",
+      url: "/auth/validate-magic-link",
+      params: { token },
     });
-}
+  
+    return response;
+  }

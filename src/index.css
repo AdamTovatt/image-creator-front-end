@@ -10,13 +10,16 @@
   --depth0: #1F1D2B;
   --depth1: #252836;
   --depth2: #313441;
-  --gray: #92949B;
+  --gray: #a7a9b1;
   --white: #FFFFFF;
   --purple: #5D5D9C;
+  --purple-lighter: #6868a8;
   --positive: #22B07D;
   --warning: #FFB74F;
   --danger: #D44848;
   --neutral: #32A7E2;
+  --light-gray: #D9D9D9;
+  --black: #0a0a0e;
 
   /* Text and background */
   --background-color: var(--depth0);
@@ -26,7 +29,7 @@
 
   /* Buttons */
   --button-bg-color: var(--purple);
-  --button-hover-bg: var(--depth2);
+  --button-hover-bg: var(--purple-lighter);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

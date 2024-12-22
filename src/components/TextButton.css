@@ -1,0 +1,62 @@
+.text-button {
+    position: relative; /* Enable positioning for the pseudo-element */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 12px; /* Border radius */
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: 'Lexend', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    overflow: hidden; /* Ensure pseudo-element stays within bounds */
+  }
+  
+  .text-button::before {
+    content: ""; /* Required for pseudo-elements */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.05); /* Semi-transparent white */
+    border-radius: inherit; /* Match the button's border radius */
+    opacity: 0; /* Start invisible */
+    transition: opacity 0.1s ease; /* Smooth fade-in */
+    pointer-events: none; /* Allow clicks to pass through */
+  }
+  
+  .text-button:hover::before {
+    opacity: 1; /* Fade in the white overlay */
+  }
+  
+  .text-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .text-button:hover:not(:disabled) {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+  }
+  
+  .text-button.full-width {
+    width: 100%; /* Full width for container */
+  }
+  
+  .spinner {
+    display: inline-block;
+    font-size: 1rem;
+    animation: spinner 1s linear infinite; /* Placeholder spinner animation */
+  }
+  
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

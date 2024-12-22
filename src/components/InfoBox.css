@@ -1,0 +1,36 @@
+.info-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Adjust spacing for the elements */
+    background-color: var(--gray);
+    color: var(--black); /* Text is black */
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    gap: 1rem; /* Space between text and button */
+  }
+  
+  .info-box-text {
+    font-size: 1rem;
+    margin: 0; /* Remove any default margin */
+  }
+  
+  .info-box-button {
+    background-color: var(--depth1); /* Button background is depth1 */
+    color: var(--white); /* Button text is white */
+    border: none;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+  }
+  
+  .info-box-button:hover {
+    background-color: var(--depth2); /* Button hover background is depth2 */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+  }
+  

@@ -1,16 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import ValidateMagicLinkPage from "./pages/ValidateMagicLinkPage";
+import PsdFilesPage from "./pages/PsdFilesPage"; // Import the PsdFilesPage component
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route
-          path="/auth/validate-magic-link"
-          element={<ValidateMagicLinkPage />}
-        />
+        <Route path="/psd-files" element={<PsdFilesPage />} />{" "}
+        {/* Route to PSD Files page */}
         {/* Add other routes here */}
       </Routes>
     </Router>

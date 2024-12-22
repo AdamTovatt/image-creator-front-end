@@ -1,0 +1,32 @@
+/* src/components/SingleLineInput.css */
+.single-line-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--input-bg-color);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    width: auto;
+    flex-wrap: nowrap; /* Ensures input and button stay in one row */
+  }
+  
+  .single-line-input {
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-family: 'Lexend', system-ui, Avenir, Helvetica, Arial, sans-serif; /* Match app font */
+    outline: none;
+    width: 300px; /* Adjust width as needed */
+  }
+  
+  .single-line-input::placeholder {
+    color: var(--placeholder-color);
+    font-style: italic;
+  }
+  
+  .single-line-input:focus {
+    background-color: var(--depth2); /* Slightly darker for focus */
+    color: var(--white);
+  }
+  
