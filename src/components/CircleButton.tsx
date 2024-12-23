@@ -18,6 +18,7 @@ interface CircleButtonProps {
   onClick: () => Promise<void>; // Function returning a promise to handle the loading
   icon?: CircleButtonIcon; // Enum value for the icon
   ariaLabel?: string; // Accessibility label
+  externalLoadingState?: boolean;
 }
 
 // Map enum values to corresponding Feather icons
@@ -37,8 +38,11 @@ const CircleButton: React.FC<CircleButtonProps> = ({
   onClick,
   icon = CircleButtonIcon.ArrowRight, // Default icon
   ariaLabel = "Circle button",
+  externalLoadingState,
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(
+    externalLoadingState ? externalLoadingState : false
+  );
 
   const handleClick = async () => {
     if (loading) return; // Prevent multiple clicks while loading

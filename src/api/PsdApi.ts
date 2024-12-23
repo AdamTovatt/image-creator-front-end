@@ -1,12 +1,13 @@
-// src/api/PsdApi.ts
-
 import { apiRequest } from "./ApiClient";
 import { ApiResponse } from "../models/ApiResponse";
 import { ExportParameters } from "../models/ExportParameters";
 import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo";
+import { MessageResponse } from "../models/MessageResponse";
 
 // 1. Upload a PSD file
-export async function uploadPsdFile(psdFile: FormData): Promise<ApiResponse> {
+export async function uploadPsdFile(
+  psdFile: FormData
+): Promise<ApiResponse<MessageResponse, MessageResponse>> {
   return await apiRequest({
     method: "POST",
     url: "/psd/upload",
@@ -15,7 +16,9 @@ export async function uploadPsdFile(psdFile: FormData): Promise<ApiResponse> {
 }
 
 // 2. Update an existing PSD file
-export async function updatePsdFile(psdFile: FormData): Promise<ApiResponse> {
+export async function updatePsdFile(
+  psdFile: FormData
+): Promise<ApiResponse<MessageResponse, MessageResponse>> {
   return await apiRequest({
     method: "POST",
     url: "/psd/update",
@@ -24,7 +27,10 @@ export async function updatePsdFile(psdFile: FormData): Promise<ApiResponse> {
 }
 
 // 3. Export a PSD file with specific parameters
-export async function exportPsdFile(parameters: ExportParameters, imageFiles: File[]): Promise<ApiResponse<Blob>> {
+export async function exportPsdFile(
+  parameters: ExportParameters,
+  imageFiles: File[]
+): Promise<ApiResponse<Blob, MessageResponse>> {
   const formData = new FormData();
   formData.append("parametersJson", JSON.stringify(parameters));
 
@@ -40,7 +46,9 @@ export async function exportPsdFile(parameters: ExportParameters, imageFiles: Fi
 }
 
 // 4. Delete a PSD file
-export async function deletePsdFile(fileName: string): Promise<ApiResponse> {
+export async function deletePsdFile(
+  fileName: string
+): Promise<ApiResponse<MessageResponse, MessageResponse>> {
   return await apiRequest({
     method: "DELETE",
     url: "/psd/delete",
@@ -49,7 +57,9 @@ export async function deletePsdFile(fileName: string): Promise<ApiResponse> {
 }
 
 // 5. List all PSD files
-export async function listPsdFiles(): Promise<ApiResponse<PhotoshopFileInfo[]>> {
+export async function listPsdFiles(): Promise<
+  ApiResponse<PhotoshopFileInfo[], MessageResponse>
+> {
   return await apiRequest({
     method: "GET",
     url: "/psd/list",
@@ -57,7 +67,9 @@ export async function listPsdFiles(): Promise<ApiResponse<PhotoshopFileInfo[]>> 
 }
 
 // 6. Download a PSD file
-export async function downloadPsdFile(fileName: string): Promise<ApiResponse<Blob>> {
+export async function downloadPsdFile(
+  fileName: string
+): Promise<ApiResponse<Blob, MessageResponse>> {
   return await apiRequest({
     method: "GET",
     url: "/psd/download",

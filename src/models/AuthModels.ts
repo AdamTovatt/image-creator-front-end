@@ -6,5 +6,5 @@ export interface UserGenerateLinkRequestBody {
 }
 
 export interface ValidateMagicLinkResponse {
-  token: string; // or { Token: string } if your API returns an object with a Token property
+  token: string;
 }

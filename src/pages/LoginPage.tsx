@@ -15,6 +15,7 @@ const LoginPage: React.FC = () => {
   );
   const [searchParams] = useSearchParams();
   const navigate = useNavigate(); // Initialize useNavigate for navigation
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // State to track successful login
 
   const formatDate = (date: Date): string => {
     const year = date.getFullYear();
@@ -34,12 +35,16 @@ const LoginPage: React.FC = () => {
         dateAndTime: formatDate(new Date()),
       });
 
-      if (response?.message) {
-        setNotificationMessage(response.message);
+      if (response.axiosError) {
+        setNotificationMessage(response.axiosError.message);
       } else {
-        setNotificationMessage(
-          `An email was sent to ${email} with a login link.`
-        );
+        if (response.success) {
+          setNotificationMessage(
+            `An email was sent to ${email} with a login link.`
+          );
+        } else {
+          setNotificationMessage(response.error!.message);
+        }
       }
     } catch (error) {
       console.error("Error sending magic link:", error);
@@ -53,20 +58,21 @@ const LoginPage: React.FC = () => {
     if (magicLink) {
       const validateLink = async () => {
         try {
-          const response = await validateMagicLink(magicLink); // Full `ApiResponse` is returned
-          const token = response.data?.token; // Access `token` from `data`
-
-          if (token) {
-            setNotificationMessage("Login successful!");
-            TokenHelper.setToken(token); // Store the token using TokenHelper
+          const response = await validateMagicLink(magicLink);
+          console.log(response);
+          if (response.axiosError) {
+            setNotificationMessage(response.axiosError.message);
           } else {
-            throw new Error("No token found in response");
+            if (response.success) {
+              setNotificationMessage("Login successful!");
+              TokenHelper.setToken(response.data!.token, 3600);
+              setIsLoggedIn(true);
+            } else {
+              setNotificationMessage(response.error!.message);
+            }
           }
-        } catch (error) {
-          console.error("Error validating magic link:", error);
-          setNotificationMessage(
-            "Failed to validate magic link. Please try again."
-          );
+        } catch {
+          setNotificationMessage("Unknown error when validating magic link.");
         }
       };
 
@@ -77,7 +83,9 @@ const LoginPage: React.FC = () => {
   const handleOkClick = () => {
     setNotificationMessage(null); // Hide the notification
     setEmail(""); // Clear the input field
-    navigate("/psd-files"); // Navigate to the '/psd-files' page when "OK" is clicked
+    if (isLoggedIn) {
+      navigate("/psd-files"); // Navigate to the '/psd-files' page only if login was successful
+    }
   };
 
   return (

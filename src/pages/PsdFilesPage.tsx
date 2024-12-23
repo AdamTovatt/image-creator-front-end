@@ -1,13 +1,23 @@
-// src/pages/PsdFilesPage.tsx
-
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate to handle navigation
 import { listPsdFiles } from "../api/PsdApi";
 import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo";
+import TokenHelper from "../helpers/TokenHelper"; // Import TokenHelper
 
 const PsdFilesPage: React.FC = () => {
   const [psdFiles, setPsdFiles] = useState<PhotoshopFileInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
+
+  // Check if the user is logged in
+  useEffect(() => {
+    const token = TokenHelper.getToken(); // Get the token from localStorage using TokenHelper
+
+    if (!token) {
+      navigate("/"); // Redirect to login page if no token exists
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchPsdFiles = async () => {
