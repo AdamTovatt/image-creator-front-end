@@ -18,6 +18,7 @@ interface CircleButtonProps {
   onClick: () => Promise<void>; // Function returning a promise to handle the loading
   icon?: CircleButtonIcon; // Enum value for the icon
   ariaLabel?: string; // Accessibility label
+  loadingStateHandledExternally: boolean;
   externalLoadingState?: boolean;
 }
 
@@ -39,18 +40,23 @@ const CircleButton: React.FC<CircleButtonProps> = ({
   icon = CircleButtonIcon.ArrowRight, // Default icon
   ariaLabel = "Circle button",
   externalLoadingState,
+  loadingStateHandledExternally,
 }) => {
-  const [loading, setLoading] = useState(
-    externalLoadingState ? externalLoadingState : false
-  );
+  const [internalLoadingState, setInternalLoadingState] = useState(false);
 
   const handleClick = async () => {
-    if (loading) return; // Prevent multiple clicks while loading
-    setLoading(true);
-    try {
+    if (loadingStateHandledExternally) {
+      if (externalLoadingState) return; // Prevent multiple clicks while loading
       await onClick();
-    } finally {
-      setLoading(false);
+    }
+    {
+      if (internalLoadingState) return; // Prevent multiple clicks while loading
+      setInternalLoadingState(true);
+      try {
+        await onClick();
+      } finally {
+        setInternalLoadingState(false);
+      }
     }
   };
 
@@ -59,9 +65,17 @@ const CircleButton: React.FC<CircleButtonProps> = ({
       className="circle-button"
       onClick={handleClick}
       aria-label={ariaLabel}
-      disabled={loading} // Disable while loading
+      disabled={
+        loadingStateHandledExternally
+          ? externalLoadingState
+          : internalLoadingState
+      } // Disable while loading
     >
-      {loading ? (
+      {(
+        loadingStateHandledExternally
+          ? externalLoadingState
+          : internalLoadingState
+      ) ? (
         <MoonLoader size={15} color="white" />
       ) : (
         <span className="icon">{CircleButtonIconMap[icon]}</span>

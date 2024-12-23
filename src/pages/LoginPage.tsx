@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { generateMagicLink, validateMagicLink } from "../api/AuthApi";
-import CircleButton from "../components/CircleButton";
 import SingleLineInput from "../components/SingleLineInput";
 import InfoBox from "../components/InfoBox";
 import { CircleButtonIcon } from "../constants/CircleButtonIcon";
@@ -100,13 +99,9 @@ const LoginPage: React.FC = () => {
             value={email}
             onChange={setEmail}
             placeholder="Enter email..."
-            button={
-              <CircleButton
-                onClick={handleLogin}
-                icon={CircleButtonIcon.ArrowRight}
-                ariaLabel="Send Magic Link"
-              />
-            }
+            onSubmit={handleLogin}
+            buttonAriaLabel="Send magic link login email"
+            buttonIcon={CircleButtonIcon.ArrowRight}
           />
         </>
       )}
