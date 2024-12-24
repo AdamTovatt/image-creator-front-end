@@ -1,13 +1,16 @@
+// src/pages/PsdFilesPage.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate to handle navigation
-import { listPsdFiles } from "../api/PsdApi";
-import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo";
+import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo"; // Import the PhotoshopFileInfo type
+import PsdFileListView from "../components/PsdFileListView"; // Import the list view component
 import TokenHelper from "../helpers/TokenHelper"; // Import TokenHelper
+import "./PsdFilesPage.css";
+import SelectedFileDetails from "../components/SelectedFileDetails";
 
 const PsdFilesPage: React.FC = () => {
-  const [psdFiles, setPsdFiles] = useState<PhotoshopFileInfo[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<PhotoshopFileInfo | null>(
+    null
+  ); // Correct typing for selected file
   const navigate = useNavigate(); // Initialize useNavigate for navigation
 
   // Check if the user is logged in
@@ -19,51 +22,24 @@ const PsdFilesPage: React.FC = () => {
     }
   }, [navigate]);
 
-  useEffect(() => {
-    const fetchPsdFiles = async () => {
-      try {
-        const response = await listPsdFiles();
-        if (response.data) {
-          setPsdFiles(response.data);
-        } else {
-          setError("Failed to load PSD files.");
-        }
-      } catch (error) {
-        setError("An error occurred while fetching the PSD files." + error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPsdFiles();
-  }, []);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  const handleFileSelect = (file: PhotoshopFileInfo) => {
+    setSelectedFile(file);
+    // You can perform further actions with the selected file here, such as navigating
+  };
 
   return (
     <div>
-      <h1>PSD Files</h1>
-      <ul>
-        {psdFiles.map((file) => (
-          <li key={file.name}>
-            <h3>{file.name}</h3>
-            {file.metadata && (
-              <>
-                <img src={file.metadata.thumbnailUrl} alt="thumbnail" />
-                <ul>
-                  {file.metadata.layers.map((layer, index) => (
-                    <li key={index}>
-                      <strong>{layer.layerName}</strong>
-                      {layer.isTextLayer && <p>Text: {layer.textContent}</p>}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+      <div className="main-container">
+        <div className="files-container">
+          <PsdFileListView onSelect={handleFileSelect} />
+          <div className="spacer"></div>
+          {selectedFile ? (
+            <SelectedFileDetails file={selectedFile} />
+          ) : (
+            <div>No file selected</div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -26,7 +26,7 @@
   }
   
   .single-line-input:focus {
-    background-color: var(--depth2); /* Slightly darker for focus */
+    background-color: var(--depth20); /* Slightly darker for focus */
     color: var(--white);
   }
   

@@ -1,43 +1,36 @@
 /* src/pages/PsdFilesPage.css */
+.main-container {
+  display: flex;
+  margin: 2rem;
+  justify-content: center;
+}
 
 .psd-files-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: var(--background-color);
-    padding: 2rem;
-  }
-  
-  .psd-files-page h1 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: var(--text-color);
-    margin-bottom: 1.5rem;
-  }
-  
-  .psd-files-page p {
-    font-size: 1.2rem;
-    color: var(--gray);
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .psd-files-page button {
-    background-color: var(--purple);
-    color: var(--white);
-    border: none;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 2rem;
-    transition: background-color 0.3s ease;
-  }
-  
-  .psd-files-page button:hover {
-    background-color: var(--purple-lighter);
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 2rem;
+}
+
+.files-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.spacer {
+  min-width: 1rem;
+}
+
+.selected-file-details {
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.selected-file-details h2 {
+  margin: 0;
+  color: #333;
+}

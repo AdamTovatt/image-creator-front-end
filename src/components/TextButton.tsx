@@ -13,7 +13,7 @@ interface TextButtonProps {
 const TextButton: React.FC<TextButtonProps> = ({
   text,
   onClick,
-  bgColor = "var(--depth1)", // Default background color
+  bgColor = "var(--depth10)", // Default background color
   textColor = "var(--white)", // Default text color
   fullWidth = false, // Default is not full width
   ariaLabel = "Text button",

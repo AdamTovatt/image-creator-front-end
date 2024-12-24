@@ -19,7 +19,7 @@
   }
   
   .info-box-button {
-    background-color: var(--depth1); /* Button background is depth1 */
+    background-color: var(--depth10); /* Button background is depth1 */
     color: var(--white); /* Button text is white */
     border: none;
     border-radius: 20px;
@@ -30,7 +30,7 @@
   }
   
   .info-box-button:hover {
-    background-color: var(--depth2); /* Button hover background is depth2 */
+    background-color: var(--depth20); /* Button hover background is depth2 */
     transform: scale(1.05); /* Slightly enlarge on hover */
   }
   

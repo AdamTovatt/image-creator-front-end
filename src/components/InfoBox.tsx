@@ -14,7 +14,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({ text, onClose }) => {
       <TextButton
         text="Ok"
         onClick={async () => onClose()} // Wrap in async to use spinner
-        bgColor="var(--depth1)" // Example background color
+        bgColor="var(--depth10)" // Example background color
         textColor="var(--white)" // Example text color
         fullWidth={true} // Example full width
       />
