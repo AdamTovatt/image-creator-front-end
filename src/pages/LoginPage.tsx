@@ -6,6 +6,7 @@ import InfoBox from "../components/InfoBox";
 import { CircleButtonIcon } from "../constants/CircleButtonIcon";
 import TokenHelper from "../helpers/TokenHelper"; // Import the TokenHelper class
 import "./LoginPage.css";
+import { MoonLoader } from "react-spinners";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -15,6 +16,8 @@ const LoginPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate(); // Initialize useNavigate for navigation
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // State to track successful login
+  const [shouldShowLoading, setShouldShowLoading] = useState<boolean>(true);
+  const [loadingText, setLoadingText] = useState<string>("Loading...");
 
   const formatDate = (date: Date): string => {
     const year = date.getFullYear();
@@ -35,7 +38,9 @@ const LoginPage: React.FC = () => {
       });
 
       if (response.axiosError) {
-        setNotificationMessage(response.axiosError.message);
+        setNotificationMessage(
+          "Error with connection to server: " + response.axiosError.message
+        );
       } else {
         if (response.success) {
           setNotificationMessage(
@@ -53,31 +58,41 @@ const LoginPage: React.FC = () => {
 
   // Validate the magic link if the query parameter is present
   useEffect(() => {
-    const magicLink = searchParams.get("magicLink");
-    if (magicLink) {
-      const validateLink = async () => {
-        try {
-          const response = await validateMagicLink(magicLink);
-          console.log(response);
-          if (response.axiosError) {
-            setNotificationMessage(response.axiosError.message);
-          } else {
-            if (response.success) {
-              setNotificationMessage("Login successful!");
-              TokenHelper.setToken(response.data!.token, 3600);
-              setIsLoggedIn(true);
+    if (TokenHelper.hasToken()) {
+      navigate("/psd-files");
+    } else {
+      setShouldShowLoading(false);
+      const magicLink = searchParams.get("magicLink");
+      if (magicLink) {
+        const validateLink = async () => {
+          try {
+            setShouldShowLoading(true);
+            setLoadingText("Validating your magic link...");
+            const response = await validateMagicLink(magicLink);
+            setShouldShowLoading(false);
+            if (response.axiosError) {
+              setNotificationMessage(
+                "Error with connection to server: " +
+                  response.axiosError.message
+              );
             } else {
-              setNotificationMessage(response.error!.message);
+              if (response.success) {
+                setNotificationMessage("Login successful!");
+                TokenHelper.setToken(response.data!.token, 3600);
+                setIsLoggedIn(true);
+              } else {
+                setNotificationMessage(response.error!.message);
+              }
             }
+          } catch {
+            setNotificationMessage("Unknown error when validating magic link.");
           }
-        } catch {
-          setNotificationMessage("Unknown error when validating magic link.");
-        }
-      };
+        };
 
-      validateLink();
+        validateLink();
+      }
     }
-  }, [searchParams]);
+  }, [searchParams, navigate]);
 
   const handleOkClick = () => {
     setNotificationMessage(null); // Hide the notification
@@ -93,16 +108,25 @@ const LoginPage: React.FC = () => {
         <InfoBox text={notificationMessage} onClose={handleOkClick} />
       ) : (
         <>
-          <h1 className="login-title">Enter your email</h1>
-          <SingleLineInput
-            type="email"
-            value={email}
-            onChange={setEmail}
-            placeholder="Enter email..."
-            onSubmit={handleLogin}
-            buttonAriaLabel="Send magic link login email"
-            buttonIcon={CircleButtonIcon.ArrowRight}
-          />
+          {shouldShowLoading ? (
+            <>
+              <h1 className="login-title">{loadingText}</h1>
+              <MoonLoader size={30} color="white" />
+            </>
+          ) : (
+            <>
+              <h1 className="login-title">Enter your email</h1>
+              <SingleLineInput
+                type="email"
+                value={email}
+                onChange={setEmail}
+                placeholder="Enter email..."
+                onSubmit={handleLogin}
+                buttonAriaLabel="Send magic link login email"
+                buttonIcon={CircleButtonIcon.ArrowRight}
+              />
+            </>
+          )}
         </>
       )}
     </div>
