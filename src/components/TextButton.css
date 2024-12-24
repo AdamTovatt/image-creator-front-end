@@ -7,10 +7,10 @@
     border-radius: 12px; /* Border radius */
     padding: 0.5rem 1rem;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 300;
     font-family: 'Lexend', system-ui, Avenir, Helvetica, Arial, sans-serif;
     cursor: pointer;
-    transition: transform 0.1s ease;
+    transition: transform 0.05s ease;
     overflow: hidden; /* Ensure pseudo-element stays within bounds */
   }
   
@@ -24,7 +24,7 @@
     background-color: rgba(255, 255, 255, 0.05); /* Semi-transparent white */
     border-radius: inherit; /* Match the button's border radius */
     opacity: 0; /* Start invisible */
-    transition: opacity 0.1s ease; /* Smooth fade-in */
+    transition: opacity 0.05s ease; /* Smooth fade-in */
     pointer-events: none; /* Allow clicks to pass through */
   }
   
@@ -38,7 +38,7 @@
   }
   
   .text-button:hover:not(:disabled) {
-    transform: scale(1.05); /* Slightly enlarge on hover */
+    transform: scale(1.02); /* Slightly enlarge on hover */
   }
   
   .text-button.full-width {

@@ -2,4 +2,5 @@
     background-color: var(--depth5);
     padding: 1rem;
     border-radius: 12px;
+    overflow: auto;
 }

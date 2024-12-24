@@ -23,11 +23,13 @@
   .text-part {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
   }
 
-  .thumbnail-part {
-
+  .text-part-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
   
   .psd-file-info h3 {

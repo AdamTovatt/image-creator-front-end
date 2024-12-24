@@ -1,23 +1,18 @@
 /* src/pages/PsdFilesPage.css */
 .main-container {
   display: flex;
-  margin: 2rem;
+  margin: 3rem;
   justify-content: center;
+  height: calc(100vh - 6rem);
 }
 
-.psd-files-page {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  margin: 2rem;
-}
-
-.files-container {
+.parts-container {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   width: 100%;
   max-width: 1200px;
+  height: 100%;
 }
 
 .spacer {
@@ -33,4 +28,17 @@
 .selected-file-details h2 {
   margin: 0;
   color: #333;
+}
+
+.no-file-selected-outer {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.no-file-selected-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }

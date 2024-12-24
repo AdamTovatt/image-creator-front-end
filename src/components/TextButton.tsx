@@ -8,6 +8,7 @@ interface TextButtonProps {
   textColor?: string; // Text color (CSS variable or hex)
   fullWidth?: boolean; // Whether the button should fill its container
   ariaLabel?: string; // Accessibility label
+  extraVerticalPadding?: number; // The extra height in rem
 }
 
 const TextButton: React.FC<TextButtonProps> = ({
@@ -17,6 +18,7 @@ const TextButton: React.FC<TextButtonProps> = ({
   textColor = "var(--white)", // Default text color
   fullWidth = false, // Default is not full width
   ariaLabel = "Text button",
+  extraVerticalPadding: extraVerticalPadding = 0,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +40,16 @@ const TextButton: React.FC<TextButtonProps> = ({
       aria-label={ariaLabel}
       disabled={loading} // Disable while loading
     >
-      {loading ? <span className="spinner">o</span> : text}
+      <div
+        style={{
+          paddingTop: extraVerticalPadding ? extraVerticalPadding + "rem" : 0,
+          paddingBottom: extraVerticalPadding
+            ? extraVerticalPadding + "rem"
+            : 0,
+        }}
+      >
+        {loading ? <span className="spinner">o</span> : text}
+      </div>
     </button>
   );
 };

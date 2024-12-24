@@ -20,12 +20,35 @@ const PsdFileListItem: React.FC<PsdFileListItemProps> = ({
       className={`psd-file-list-item ${isSelected ? "selected" : ""}`}
       onClick={onClick}
     >
-      <div className="text-part">{name}</div>
-      <div className="thumbnail-part">
-        {metadata && <img src={metadata.thumbnailUrl} alt="Thumbnail" />}
+      <div className="text-part">
+        <div>{name}</div>
+        <div className="text-part-end">
+          <div style={{ opacity: 0.7 }}>1080x1080 px (124 MB)</div>
+          <div style={{ opacity: 0.5, fontSize: "0.75rem" }}>
+            {GetLayerInfoText(file)}
+          </div>
+        </div>
       </div>
+      {metadata && (
+        <img
+          src={metadata.thumbnailUrl}
+          alt="Thumbnail"
+          style={{ maxWidth: 64, borderRadius: "6px" }}
+        />
+      )}
     </div>
   );
+};
+
+const GetLayerInfoText = (file: PhotoshopFileInfo): string => {
+  if (!file.metadata) return "Missing metadata";
+  const textLayers = file.metadata?.layers.filter(
+    (x) => x.isTextLayer && x.isRecommendedForChanging
+  ).length;
+  const imageLayers = file.metadata?.layers.filter(
+    (x) => x.isImageLayer && x.isRecommendedForChanging
+  ).length;
+  return `${textLayers} texts & ${imageLayers} images recommended for change`;
 };
 
 export default PsdFileListItem;
