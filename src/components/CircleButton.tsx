@@ -6,14 +6,17 @@ import {
   ChevronRight as FeatherChevronRight,
   Plus as FeatherPlus,
   X as FeatherX,
-  Trash as FeatherTrash,
   Edit as FeatherEdit,
   HelpCircle as FeatherHelpCircle,
   Send as FeatherSend,
   Check as FeatherCheck,
   RefreshCw,
+  UploadCloud,
+  DownloadCloud,
+  Trash2,
 } from "react-feather";
 import { CircleButtonIcon } from "../constants/CircleButtonIcon"; // Import your enum file
+import { Color } from "../constants/Color";
 
 interface CircleButtonProps {
   onClick: () => Promise<void>; // Function returning a promise to handle the loading
@@ -21,6 +24,7 @@ interface CircleButtonProps {
   ariaLabel?: string; // Accessibility label
   loadingStateHandledExternally?: boolean;
   externalLoadingState?: boolean;
+  backgroundColor?: Color;
 }
 
 // Map enum values to corresponding Feather icons
@@ -29,12 +33,14 @@ const CircleButtonIconMap: Record<CircleButtonIcon, JSX.Element> = {
   [CircleButtonIcon.ChevronRight]: <FeatherChevronRight />,
   [CircleButtonIcon.Plus]: <FeatherPlus />,
   [CircleButtonIcon.X]: <FeatherX />,
-  [CircleButtonIcon.Trash]: <FeatherTrash />,
+  [CircleButtonIcon.Trash]: <Trash2 />,
   [CircleButtonIcon.Edit]: <FeatherEdit />,
   [CircleButtonIcon.HelpCircle]: <FeatherHelpCircle />,
   [CircleButtonIcon.Send]: <FeatherSend />,
   [CircleButtonIcon.Check]: <FeatherCheck />,
   [CircleButtonIcon.Refresh]: <RefreshCw />,
+  [CircleButtonIcon.Upload]: <UploadCloud />,
+  [CircleButtonIcon.Download]: <DownloadCloud />,
 };
 
 const CircleButton: React.FC<CircleButtonProps> = ({
@@ -43,6 +49,7 @@ const CircleButton: React.FC<CircleButtonProps> = ({
   ariaLabel = "Circle button",
   externalLoadingState,
   loadingStateHandledExternally = false,
+  backgroundColor = Color.Purple,
 }) => {
   const [internalLoadingState, setInternalLoadingState] = useState(false);
 
@@ -67,11 +74,13 @@ const CircleButton: React.FC<CircleButtonProps> = ({
       className="circle-button"
       onClick={handleClick}
       aria-label={ariaLabel}
+      title={ariaLabel}
+      style={{ backgroundColor: backgroundColor }}
       disabled={
         loadingStateHandledExternally
           ? externalLoadingState
           : internalLoadingState
-      } // Disable while loading
+      }
     >
       {(
         loadingStateHandledExternally

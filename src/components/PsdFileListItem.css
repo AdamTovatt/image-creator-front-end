@@ -15,6 +15,24 @@
     font-size: 0.875rem;
   }
   
+  .psd-file-list-item:hover {
+    transform: scale(1.01);
+    position: relative;
+}
+
+.psd-file-list-item:hover::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.01); /* White with slight transparency */
+    pointer-events: none; /* Ensures it doesn't block interactions */
+    z-index: 1; /* Places it above the background but below any child content */
+}
+
+
   .psd-file-list-item.selected {
     opacity: 1;
     border: 2px solid var(--purple);

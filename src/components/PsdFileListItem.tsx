@@ -23,7 +23,7 @@ const PsdFileListItem: React.FC<PsdFileListItemProps> = ({
       <div className="text-part">
         <div>{name}</div>
         <div className="text-part-end">
-          <div style={{ opacity: 0.7 }}>1080x1080 px (124 MB)</div>
+          <div style={{ opacity: 0.7 }}>{GetDocumentSizeText(file)}</div>
           <div style={{ opacity: 0.5, fontSize: "0.75rem" }}>
             {GetLayerInfoText(file)}
           </div>
@@ -38,6 +38,16 @@ const PsdFileListItem: React.FC<PsdFileListItemProps> = ({
       )}
     </div>
   );
+};
+
+const GetDocumentSizeText = (file: PhotoshopFileInfo): string => {
+  if (!file.metadata) return "Missing metadata";
+
+  const megabytes = file.metadata.fileSize / 1000000;
+
+  return `${file.metadata.width}x${
+    file.metadata.height
+  } px (${megabytes.toFixed(megabytes < 10 ? 1 : 0)} MB)`;
 };
 
 const GetLayerInfoText = (file: PhotoshopFileInfo): string => {

@@ -9,4 +9,6 @@ export enum CircleButtonIcon {
   Send = "Send",
   Check = "Check",
   Refresh = "Refresh",
+  Upload = "Upload",
+  Download = "Download",
 }

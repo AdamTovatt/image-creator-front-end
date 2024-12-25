@@ -7,9 +7,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/psd-files" element={<PsdFilesPage />} />{" "}
-        {/* Route to PSD Files page */}
-        {/* Add other routes here */}
+        <Route path="/psd-files" element={<PsdFilesPage />} />
       </Routes>
     </Router>
   );

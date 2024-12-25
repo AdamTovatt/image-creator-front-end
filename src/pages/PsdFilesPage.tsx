@@ -24,7 +24,6 @@ const PsdFilesPage: React.FC = () => {
 
   const handleFileSelect = (file: PhotoshopFileInfo) => {
     setSelectedFile(file);
-    // You can perform further actions with the selected file here, such as navigating
   };
 
   return (
