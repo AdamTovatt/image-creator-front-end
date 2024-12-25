@@ -1,8 +1,15 @@
+import { CircleButtonIcon } from "../constants/CircleButtonIcon";
+import CircleButton from "./CircleButton";
+
 interface ImageViewProps {
   imageUrl?: string;
+  onRefreshRequested?: () => Promise<void>;
 }
 
-const ImageView: React.FC<ImageViewProps> = ({ imageUrl }) => {
+const ImageView: React.FC<ImageViewProps> = ({
+  imageUrl,
+  onRefreshRequested,
+}) => {
   return (
     <div
       style={{
@@ -30,7 +37,23 @@ const ImageView: React.FC<ImageViewProps> = ({ imageUrl }) => {
         {imageUrl ? (
           <img src={imageUrl} style={{ width: "100%" }} />
         ) : (
-          <div>No image available</div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              gap: "1rem",
+            }}
+          >
+            <div>No image available</div>
+            {onRefreshRequested ? (
+              <CircleButton
+                icon={CircleButtonIcon.Refresh}
+                onClick={onRefreshRequested}
+              />
+            ) : null}
+          </div>
         )}
       </div>
     </div>

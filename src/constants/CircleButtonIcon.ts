@@ -8,4 +8,5 @@ export enum CircleButtonIcon {
   HelpCircle = "HelpCircle",
   Send = "Send",
   Check = "Check",
+  Refresh = "Refresh",
 }

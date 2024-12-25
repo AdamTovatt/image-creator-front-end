@@ -11,6 +11,7 @@ import {
   HelpCircle as FeatherHelpCircle,
   Send as FeatherSend,
   Check as FeatherCheck,
+  RefreshCw,
 } from "react-feather";
 import { CircleButtonIcon } from "../constants/CircleButtonIcon"; // Import your enum file
 
@@ -18,7 +19,7 @@ interface CircleButtonProps {
   onClick: () => Promise<void>; // Function returning a promise to handle the loading
   icon?: CircleButtonIcon; // Enum value for the icon
   ariaLabel?: string; // Accessibility label
-  loadingStateHandledExternally: boolean;
+  loadingStateHandledExternally?: boolean;
   externalLoadingState?: boolean;
 }
 
@@ -33,6 +34,7 @@ const CircleButtonIconMap: Record<CircleButtonIcon, JSX.Element> = {
   [CircleButtonIcon.HelpCircle]: <FeatherHelpCircle />,
   [CircleButtonIcon.Send]: <FeatherSend />,
   [CircleButtonIcon.Check]: <FeatherCheck />,
+  [CircleButtonIcon.Refresh]: <RefreshCw />,
 };
 
 const CircleButton: React.FC<CircleButtonProps> = ({
@@ -40,7 +42,7 @@ const CircleButton: React.FC<CircleButtonProps> = ({
   icon = CircleButtonIcon.ArrowRight, // Default icon
   ariaLabel = "Circle button",
   externalLoadingState,
-  loadingStateHandledExternally,
+  loadingStateHandledExternally = false,
 }) => {
   const [internalLoadingState, setInternalLoadingState] = useState(false);
 

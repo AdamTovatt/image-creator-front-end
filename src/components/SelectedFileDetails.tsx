@@ -1,3 +1,4 @@
+import { createMetadata } from "../api/PsdApi";
 import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo";
 import "./Components.css";
 import ImageView from "./ImageView";
@@ -8,9 +9,18 @@ type SelectedFileDetailsProps = {
 };
 
 const SelectedFileDetails: React.FC<SelectedFileDetailsProps> = ({ file }) => {
+  const handleCreateMetadata = async () => {
+    if (file.name) {
+      await createMetadata(file.name, false);
+    }
+  };
+
   return (
     <div className="simple-container" style={{ flex: 1 }}>
-      <ImageView imageUrl={file.metadata?.thumbnailUrl} />
+      <ImageView
+        imageUrl={file.metadata?.thumbnailUrl}
+        onRefreshRequested={handleCreateMetadata}
+      />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div>Placeholder</div>

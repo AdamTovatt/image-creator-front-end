@@ -76,3 +76,15 @@ export async function downloadPsdFile(
     params: { fileName },
   });
 }
+
+// 7. Create metadata for a PSD file
+export async function createMetadata(
+  fileName: string,
+  inBackground: boolean
+): Promise<ApiResponse<MessageResponse, MessageResponse>> {
+  return await apiRequest({
+    method: "POST",
+    url: "/psd/create-metadata",
+    params: { fileName, inBackground },
+  });
+}
