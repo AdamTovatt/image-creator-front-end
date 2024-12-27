@@ -69,7 +69,7 @@ export async function listPsdFiles(): Promise<
 // 6. Download a PSD file
 export async function downloadPsdFile(
   fileName: string
-): Promise<ApiResponse<Blob, MessageResponse>> {
+): Promise<ApiResponse<ArrayBuffer, MessageResponse>> {
   return await apiRequest({
     method: "GET",
     url: "/psd/download",

@@ -35,7 +35,7 @@ const ImageView: React.FC<ImageViewProps> = ({
         }}
       >
         {imageUrl ? (
-          <img src={imageUrl} style={{ width: "100%" }} />
+          <img src={imageUrl} style={{ maxWidth: "100%", maxHeight: "100%" }} />
         ) : (
           <div
             style={{
