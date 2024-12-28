@@ -11,6 +11,7 @@ import React from "react";
 
 type SelectedFileDetailsProps = {
   file: PhotoshopFileInfo;
+  closeRequested: () => Promise<void>;
 };
 
 type FileHeaderAndButtonsProps = {
@@ -20,9 +21,15 @@ type FileHeaderAndButtonsProps = {
 
 type BottomButtonProps = {
   file: PhotoshopFileInfo;
+  closeRequested: () => Promise<void>;
 };
 
-const BottomButton: React.FC<BottomButtonProps> = ({ file }) => {
+const BottomButton: React.FC<BottomButtonProps> = ({
+  file,
+  closeRequested,
+}) => {
+  const navigate = useNavigate();
+
   return (
     <div
       style={{
@@ -32,13 +39,24 @@ const BottomButton: React.FC<BottomButtonProps> = ({ file }) => {
       }}
     >
       <div style={{ marginBottom: "0.5rem" }}>{file.name}</div>
-      <TextButton
-        text="Use this"
-        onClick={async () => {}}
-        bgColor="var(--purple)"
-        fullWidth={true}
-        extraVerticalPadding={0.5}
-      />
+      <div style={{ display: "flex", gap: "0.5rem" }}>
+        <TextButton
+          text="Close"
+          onClick={closeRequested}
+          ariaLabel="Close file details"
+          extraVerticalPadding={0.5}
+          fullWidth={true}
+        />
+        <TextButton
+          text="Use this"
+          onClick={async () => {
+            navigate("/export/" + file.name);
+          }}
+          bgColor={Color.Purple}
+          fullWidth={true}
+          extraVerticalPadding={0.5}
+        />
+      </div>
     </div>
   );
 };
@@ -54,7 +72,6 @@ const FileHeaderAndButtons: React.FC<FileHeaderAndButtonsProps> = ({
         const blob = new Blob([response.data!], {
           type: "application/octet-stream",
         });
-        console.log(blob);
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
@@ -134,7 +151,10 @@ const FileHeaderAndButtons: React.FC<FileHeaderAndButtonsProps> = ({
   );
 };
 
-const SelectedFileDetails: React.FC<SelectedFileDetailsProps> = ({ file }) => {
+const SelectedFileDetails: React.FC<SelectedFileDetailsProps> = ({
+  file,
+  closeRequested,
+}) => {
   const navigate = useNavigate();
   const createMetadataInBackground = true;
 
@@ -184,7 +204,7 @@ const SelectedFileDetails: React.FC<SelectedFileDetailsProps> = ({ file }) => {
             onRefreshRequested={handleCreateMetadata}
           />
         </div>
-        <BottomButton file={file} />
+        <BottomButton file={file} closeRequested={closeRequested} />
       </div>
     </div>
   );

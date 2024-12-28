@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import PsdFilesPage from "./pages/PsdFilesPage"; // Import the PsdFilesPage component
+import PsdFilesPage from "./pages/PsdFilesPage";
+import ExportPage from "./pages/ExportPage";
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/psd-files" element={<PsdFilesPage />} />
+        <Route path="/export/:fileName" element={<ExportPage />} />
       </Routes>
     </Router>
   );

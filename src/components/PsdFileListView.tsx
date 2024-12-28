@@ -1,4 +1,3 @@
-// src/components/PsdFileListView.tsx
 import React, { useState, useEffect } from "react";
 import PsdFileListItem from "./PsdFileListItem";
 import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo";
@@ -8,16 +7,23 @@ import { useNavigate } from "react-router-dom";
 
 interface PsdFileListViewProps {
   onSelect: (file: PhotoshopFileInfo) => void; // Callback to handle selection
+  selectedFile: PhotoshopFileInfo | null; // Add selectedFile prop
 }
 
-const PsdFileListView: React.FC<PsdFileListViewProps> = ({ onSelect }) => {
+const PsdFileListView: React.FC<PsdFileListViewProps> = ({
+  onSelect,
+  selectedFile, // Receive selectedFile prop
+}) => {
   const [psdFiles, setPsdFiles] = useState<PhotoshopFileInfo[]>([]);
-  const [selectedFile, setSelectedFile] = useState<PhotoshopFileInfo | null>(
-    null
-  );
+  const [internalSelectedFile, setInternalSelectedFile] =
+    useState<PhotoshopFileInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate(); // Initialize useNavigate for navigation
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setInternalSelectedFile(selectedFile); // Sync internal state with selectedFile prop
+  }, [selectedFile]);
 
   useEffect(() => {
     const fetchPsdFiles = async () => {
@@ -26,13 +32,13 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({ onSelect }) => {
         if (response.success) {
           setPsdFiles(response.data!);
         } else {
-          if (response.statusCode == 401) {
+          if (response.statusCode === 401) {
             navigate("/");
           } else if (response.error) {
             setError("Failed to load PSD files: " + response.error);
           } else {
             setError(
-              "Faile to load PSD files: " + response.axiosError?.message
+              "Failed to load PSD files: " + response.axiosError?.message
             );
           }
         }
@@ -47,7 +53,7 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({ onSelect }) => {
   }, [navigate]);
 
   const handleItemClick = (file: PhotoshopFileInfo) => {
-    setSelectedFile(file); // Set selected file
+    setInternalSelectedFile(file); // Set internal state
     onSelect(file); // Notify parent of the selected file
   };
 
@@ -60,7 +66,7 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({ onSelect }) => {
         <PsdFileListItem
           key={file.name}
           file={file}
-          isSelected={file === selectedFile}
+          isSelected={file === internalSelectedFile}
           onClick={() => handleItemClick(file)}
         />
       ))}

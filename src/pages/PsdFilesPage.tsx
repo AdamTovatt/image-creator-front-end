@@ -30,10 +30,18 @@ const PsdFilesPage: React.FC = () => {
     <div>
       <div className="main-container">
         <div className="parts-container">
-          <PsdFileListView onSelect={handleFileSelect} />
+          <PsdFileListView
+            selectedFile={selectedFile}
+            onSelect={handleFileSelect}
+          />
           <div className="spacer"></div>
           {selectedFile ? (
-            <SelectedFileDetails file={selectedFile} />
+            <SelectedFileDetails
+              file={selectedFile}
+              closeRequested={async () => {
+                setSelectedFile(null);
+              }}
+            />
           ) : (
             <div className="no-file-selected-outer">
               <div className="no-file-selected-inner">No file selected</div>
