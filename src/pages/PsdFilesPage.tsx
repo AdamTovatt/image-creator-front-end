@@ -6,6 +6,8 @@ import PsdFileListView from "../components/PsdFileListView"; // Import the list 
 import TokenHelper from "../helpers/TokenHelper"; // Import TokenHelper
 import "./PsdFilesPage.css";
 import SelectedFileDetails from "../components/SelectedFileDetails";
+import CenteredMainContainer from "../components/CenteredMainContainer";
+import MultiplePartsMainContentContainer from "../components/MultiplePartsMainContentContainer";
 
 const PsdFilesPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<PhotoshopFileInfo | null>(
@@ -28,8 +30,8 @@ const PsdFilesPage: React.FC = () => {
 
   return (
     <div>
-      <div className="main-container">
-        <div className="parts-container">
+      <CenteredMainContainer>
+        <MultiplePartsMainContentContainer>
           <PsdFileListView
             selectedFile={selectedFile}
             onSelect={handleFileSelect}
@@ -47,8 +49,8 @@ const PsdFilesPage: React.FC = () => {
               <div className="no-file-selected-inner">No file selected</div>
             </div>
           )}
-        </div>
-      </div>
+        </MultiplePartsMainContentContainer>
+      </CenteredMainContainer>
     </div>
   );
 };
