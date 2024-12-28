@@ -6,7 +6,7 @@ import {
   ChevronRight as FeatherChevronRight,
   Plus as FeatherPlus,
   X as FeatherX,
-  Edit as FeatherEdit,
+  Edit3 as FeatherEdit,
   HelpCircle as FeatherHelpCircle,
   Send as FeatherSend,
   Check as FeatherCheck,

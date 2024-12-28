@@ -61,3 +61,23 @@ h1 {
   max-width: 1200px;
   height: 100%;
 }
+
+.simple-container{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background-color: var(--depth5);
+  padding: 1rem;
+  border-radius: 12px;
+  overflow: auto;
+}
+
+.inner-flex-element {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 1rem;
+  background-color: var(--depth20);
+  border-radius: 10px;
+  font-size: 0.875rem;
+}

@@ -4,6 +4,7 @@ import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo";
 import { listPsdFiles } from "../api/PsdApi"; // Assuming you have this API function
 import "./Components.css";
 import { useNavigate } from "react-router-dom";
+import SimpleContainer from "./SimpleContainer";
 
 interface PsdFileListViewProps {
   onSelect: (file: PhotoshopFileInfo) => void; // Callback to handle selection
@@ -61,7 +62,7 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="simple-container" style={{ width: "45%" }}>
+    <SimpleContainer style={{ width: "45%" }}>
       {psdFiles.map((file) => (
         <PsdFileListItem
           key={file.name}
@@ -70,7 +71,7 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({
           onClick={() => handleItemClick(file)}
         />
       ))}
-    </div>
+    </SimpleContainer>
   );
 };
 

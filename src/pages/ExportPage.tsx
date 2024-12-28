@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PsdLayersList from "../components/PsdLayersList";
 import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo";
 import { listPsdFiles } from "../api/PsdApi";
 import CenteredMainContainer from "../components/CenteredMainContainer";
 import MultiplePartsMainContentContainer from "../components/MultiplePartsMainContentContainer";
+import TokenHelper from "../helpers/TokenHelper";
 
 interface FullPageErrorMessageProps {
   message: string;
@@ -21,6 +22,16 @@ const ExportPage: React.FC = () => {
   const [fileInfo, setFileInfo] = useState<PhotoshopFileInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  // Check if the user is logged in
+  useEffect(() => {
+    const token = TokenHelper.getToken(); // Get the token from localStorage using TokenHelper
+
+    if (!token) {
+      navigate("/"); // Redirect to login page if no token exists
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchFileInfo = async () => {
