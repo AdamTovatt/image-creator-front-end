@@ -11,6 +11,7 @@ interface TextButtonProps {
   ariaLabel?: string; // Accessibility label
   extraVerticalPadding?: number; // The extra height in rem
   style?: React.CSSProperties;
+  disabled?: boolean;
 }
 
 const TextButton: React.FC<TextButtonProps> = ({
@@ -19,9 +20,10 @@ const TextButton: React.FC<TextButtonProps> = ({
   bgColor = "var(--depth10)", // Default background color
   textColor = "var(--white)", // Default text color
   fullWidth = false, // Default is not full width
-  ariaLabel = "Text button",
+  ariaLabel,
   extraVerticalPadding: extraVerticalPadding = 0,
   style,
+  disabled,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -40,8 +42,9 @@ const TextButton: React.FC<TextButtonProps> = ({
       className={`text-button ${fullWidth ? "full-width" : ""}`}
       style={{ backgroundColor: bgColor, color: textColor, ...style }}
       onClick={handleClick}
-      aria-label={ariaLabel}
-      disabled={loading} // Disable while loading
+      aria-label={ariaLabel ? ariaLabel : text}
+      title={ariaLabel ? ariaLabel : text}
+      disabled={loading || disabled} // Disable while loading
     >
       <div
         style={{

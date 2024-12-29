@@ -78,7 +78,7 @@ const LoginPage: React.FC = () => {
             } else {
               if (response.success) {
                 setNotificationMessage("Login successful!");
-                TokenHelper.setToken(response.data!.token, 3600);
+                TokenHelper.setToken(response.data!.token, 7200);
                 setIsLoggedIn(true);
               } else {
                 setNotificationMessage(response.error!.message);

@@ -62,9 +62,9 @@ const PsdLayersList: React.FC<PsdLayersListProps> = ({
   };
 
   const renderLayers = (layers: PhotoshopFileMetadata["layers"]) =>
-    layers.map((layer) => (
+    layers.map((layer, index) => (
       <PsdLayersListItem
-        key={layer.layerName}
+        key={index}
         layerData={layer}
         onUpdateLayer={handleLayerUpdate}
       />

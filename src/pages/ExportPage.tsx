@@ -8,6 +8,9 @@ import MultiplePartsMainContentContainer from "../components/MultiplePartsMainCo
 import TokenHelper from "../helpers/TokenHelper";
 import TextButton from "../components/TextButton";
 import { EditableExportParameters } from "../models/EditableExportParameters";
+import ImageView from "../components/ImageView";
+import { Color } from "../constants/Color";
+import "../index.css";
 
 interface FullPageErrorMessageProps {
   message: string;
@@ -26,6 +29,8 @@ const ExportPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [exportParameters, setExportParameters] =
     useState<EditableExportParameters | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | undefined>();
+  const [hasGenerated, setHasGenerated] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -44,7 +49,10 @@ const ExportPage: React.FC = () => {
         const response = await listPsdFiles();
 
         if (response.success) {
-          setFileInfo(response.data!.find((f) => f.name === fileName) || null);
+          const responseFileInfo =
+            response.data!.find((f) => f.name === fileName) || null;
+          setFileInfo(responseFileInfo);
+          setPreviewUrl(responseFileInfo?.metadata?.previewUrl ?? undefined);
         } else if (response.error) {
           setErrorMessage(response.error!.message);
         } else if (response.axiosError) {
@@ -72,30 +80,30 @@ const ExportPage: React.FC = () => {
 
     const { files, ...parameters } = exportParameters; // Exclude files from the JSON payload
 
-    const exportResponse = await exportPsdFile(parameters, files);
+    try {
+      const exportResponse = await exportPsdFile(parameters, files);
 
-    if (exportResponse.success) {
-      // Create a Blob from the ArrayBuffer response
-      const blob = new Blob([exportResponse.data!], {
-        type: "application/octet-stream",
-      });
+      if (exportResponse.statusCode === 401) {
+        navigate("/"); // Redirect to login if unauthorized
+        return;
+      }
 
-      // Create a link element to trigger download
-      const downloadUrl = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.download = `${exportParameters.fileName}.psd`; // Default download name
-      document.body.appendChild(link);
-      link.click();
+      if (exportResponse.success) {
+        // Use the Blob directly
+        const blob = exportResponse.data!;
 
-      // Cleanup the link element
-      document.body.removeChild(link);
-      URL.revokeObjectURL(downloadUrl);
-    } else {
-      console.error(
-        "Export failed:",
-        exportResponse.error || exportResponse.axiosError
-      );
+        // Generate a temporary URL for the image preview
+        const previewUrl = URL.createObjectURL(blob);
+        setPreviewUrl(previewUrl);
+        setHasGenerated(true);
+      } else {
+        console.error(
+          "Export failed:",
+          exportResponse.error || exportResponse.axiosError
+        );
+      }
+    } catch (error) {
+      console.log("Error during export:", error);
     }
   };
 
@@ -128,12 +136,52 @@ const ExportPage: React.FC = () => {
           fileName={fileInfo!.name}
           onExportParametersChange={handleExportParametersChange}
         />
-        <TextButton
-          text="Export"
-          onClick={handleExport}
-          extraVerticalPadding={0.5}
-          style={{ marginTop: "1rem" }}
-        />
+        <div className="simple-container" style={{ flex: 1 }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: "100%",
+            }}
+          >
+            <ImageView imageUrl={previewUrl} />
+            <div className="vertical-list">
+              <TextButton
+                extraVerticalPadding={0.5}
+                fullWidth={true}
+                text="Generate image"
+                onClick={handleExport}
+                bgColor={Color.Purple}
+              />
+              {hasGenerated ? (
+                <TextButton
+                  ariaLabel={
+                    hasGenerated
+                      ? "Download image"
+                      : "Need to generate image first"
+                  }
+                  disabled={!hasGenerated}
+                  extraVerticalPadding={0.5}
+                  fullWidth={true}
+                  text="Download image"
+                  onClick={async () => {
+                    if (previewUrl) {
+                      const anchor = document.createElement("a");
+                      anchor.href = previewUrl;
+                      anchor.download = `${fileName || "exported-file"}.jpg`; // Default file name
+                      anchor.click();
+                      URL.revokeObjectURL(previewUrl); // Clean up URL object
+                    } else {
+                      console.error("No preview URL available for download.");
+                    }
+                  }}
+                  bgColor={Color.Neutral}
+                />
+              ) : null}
+            </div>
+          </div>
+        </div>
       </MultiplePartsMainContentContainer>
     </CenteredMainContainer>
   );

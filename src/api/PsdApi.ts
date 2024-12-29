@@ -30,18 +30,19 @@ export async function updatePsdFile(
 export async function exportPsdFile(
   parameters: ExportParameters,
   imageFiles: File[]
-): Promise<ApiResponse<ArrayBuffer, MessageResponse>> {
+): Promise<ApiResponse<Blob, MessageResponse>> {
   const formData = new FormData();
   formData.append("parametersJson", JSON.stringify(parameters));
 
-  imageFiles.forEach((file, index) => {
-    formData.append("imageFiles", file, `image-${index}`);
+  imageFiles.forEach((file) => {
+    formData.append("imageFiles", file, file.name);
   });
 
   return await apiRequest({
     method: "POST",
     url: "/psd/export-with-parameters",
     data: formData, // Send parameters as FormData
+    responseType: "blob",
   });
 }
 
@@ -69,11 +70,12 @@ export async function listPsdFiles(): Promise<
 // 6. Download a PSD file
 export async function downloadPsdFile(
   fileName: string
-): Promise<ApiResponse<ArrayBuffer, MessageResponse>> {
+): Promise<ApiResponse<Blob, MessageResponse>> {
   return await apiRequest({
     method: "GET",
     url: "/psd/download",
     params: { fileName },
+    responseType: "blob",
   });
 }
 

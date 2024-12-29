@@ -62,6 +62,12 @@ h1 {
   height: 100%;
 }
 
+.vertical-list{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .simple-container{
   display: flex;
   flex-direction: column;
