@@ -3,6 +3,7 @@ export enum Color {
   Depth5 = "var(--depth5)",
   Depth10 = "var(--depth10)",
   Depth20 = "var(--depth20)",
+  Depth25 = "var(--depth25)",
   Gray = "var(--gray)",
   White = "var(--white)",
   Purple = "var(--purple)",

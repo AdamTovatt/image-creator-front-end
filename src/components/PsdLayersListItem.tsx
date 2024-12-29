@@ -3,6 +3,7 @@ import { CircleButtonIcon } from "../constants/CircleButtonIcon";
 import { formatLayerName } from "../helpers/LayerNameHelper";
 import { PhotoshopLayer } from "../models/PhotoshopLayer";
 import CircleButton from "./CircleButton";
+import { Color } from "../constants/Color";
 
 interface PsdLayersListItemProps {
   layerData: PhotoshopLayer;
@@ -25,19 +26,30 @@ const TextLayer: React.FC<LayerProps> = ({ layerData, editing, onChange }) => {
     }
   }, [editing, layerData.textContent]);
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const updatedText = e.target.value;
     setTextContent(updatedText);
     onChange({ ...layerData, textContent: updatedText });
   };
 
   return editing ? (
-    <div>
-      <input
-        type="text"
+    <div style={{ paddingRight: "1rem", marginTop: "0.25rem" }}>
+      <textarea
         value={textContent}
         onChange={handleTextChange}
         placeholder="Edit text content"
+        rows={4} // Adjust rows as needed
+        style={{
+          width: "calc(100% - 0.5rem)",
+          fontFamily: "inherit",
+          fontSize: "inherit",
+          borderRadius: "10px",
+          padding: "0.25rem",
+          border: "none",
+          resize: "none",
+          backgroundColor: Color.Depth25,
+          color: Color.White,
+        }}
       />
     </div>
   ) : (
@@ -105,7 +117,7 @@ const PsdLayersListItem: React.FC<PsdLayersListItemProps> = ({
 
   return (
     <div className="inner-flex-element">
-      <div style={{ maxWidth: "80%" }}>
+      <div style={{ width: "calc(100% - 3rem)" }}>
         <div style={{ opacity: 0.7 }}>
           {formatLayerName(layerData.layerName)}:
         </div>
