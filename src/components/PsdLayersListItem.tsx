@@ -41,7 +41,9 @@ const TextLayer: React.FC<LayerProps> = ({ layerData, editing, onChange }) => {
       />
     </div>
   ) : (
-    <div style={{ height: "1rem" }}>{layerData.textContent}</div>
+    <div style={{ height: "1.2rem", overflow: "hidden" }}>
+      {layerData.textContent}
+    </div>
   );
 };
 
@@ -63,7 +65,7 @@ const ImageLayer: React.FC<LayerProps> = ({
       <input type="file" onChange={handleImageUpload} />
     </div>
   ) : (
-    <div style={{ height: "1rem" }}>
+    <div style={{ height: "1.2rem", overflow: "hidden" }}>
       {fileName ? fileName : "(no file uploaded)"}
     </div>
   );

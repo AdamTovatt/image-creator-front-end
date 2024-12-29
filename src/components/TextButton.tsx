@@ -55,9 +55,9 @@ const TextButton: React.FC<TextButtonProps> = ({
         }}
       >
         {loading ? (
-          <span className="spinner">
+          <div style={{ display: "flex" }}>
             <MoonLoader size={15} color="white" />
-          </span>
+          </div>
         ) : (
           text
         )}

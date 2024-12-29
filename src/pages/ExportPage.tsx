@@ -31,6 +31,7 @@ const ExportPage: React.FC = () => {
     useState<EditableExportParameters | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>();
   const [hasGenerated, setHasGenerated] = useState<boolean>(false);
+  const [currentlyExporting, setCurrentlyExporting] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -81,6 +82,7 @@ const ExportPage: React.FC = () => {
     const { files, ...parameters } = exportParameters; // Exclude files from the JSON payload
 
     try {
+      setCurrentlyExporting(true);
       const exportResponse = await exportPsdFile(parameters, files);
 
       if (exportResponse.statusCode === 401) {
@@ -104,6 +106,8 @@ const ExportPage: React.FC = () => {
       }
     } catch (error) {
       console.log("Error during export:", error);
+    } finally {
+      setCurrentlyExporting(false);
     }
   };
 
@@ -145,7 +149,7 @@ const ExportPage: React.FC = () => {
               height: "100%",
             }}
           >
-            <ImageView imageUrl={previewUrl} />
+            <ImageView imageUrl={previewUrl} loading={currentlyExporting} />
             <div className="vertical-list">
               <TextButton
                 extraVerticalPadding={0.5}
@@ -169,7 +173,10 @@ const ExportPage: React.FC = () => {
                     if (previewUrl) {
                       const anchor = document.createElement("a");
                       anchor.href = previewUrl;
-                      anchor.download = `${fileName || "exported-file"}.jpg`; // Default file name
+                      anchor.download = getCorrectFileName(
+                        fileName || "exported-file",
+                        ".jpg"
+                      ); // Default file name
                       anchor.click();
                       URL.revokeObjectURL(previewUrl); // Clean up URL object
                     } else {
@@ -186,5 +193,14 @@ const ExportPage: React.FC = () => {
     </CenteredMainContainer>
   );
 };
+
+function getCorrectFileName(fileName: string, newExtension: string): string {
+  if (!newExtension.startsWith(".")) {
+    newExtension = `.${newExtension}`;
+  }
+
+  const fileNameWithoutExtension = fileName.replace(/\.[^/.]+$/, ""); // Remove existing extension
+  return `${fileNameWithoutExtension}${newExtension}`;
+}
 
 export default ExportPage;
