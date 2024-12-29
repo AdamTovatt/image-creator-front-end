@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./TextButton.css";
+import { MoonLoader } from "react-spinners";
 
 interface TextButtonProps {
   text: string; // Button text
@@ -9,6 +10,7 @@ interface TextButtonProps {
   fullWidth?: boolean; // Whether the button should fill its container
   ariaLabel?: string; // Accessibility label
   extraVerticalPadding?: number; // The extra height in rem
+  style?: React.CSSProperties;
 }
 
 const TextButton: React.FC<TextButtonProps> = ({
@@ -19,6 +21,7 @@ const TextButton: React.FC<TextButtonProps> = ({
   fullWidth = false, // Default is not full width
   ariaLabel = "Text button",
   extraVerticalPadding: extraVerticalPadding = 0,
+  style,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +38,7 @@ const TextButton: React.FC<TextButtonProps> = ({
   return (
     <button
       className={`text-button ${fullWidth ? "full-width" : ""}`}
-      style={{ backgroundColor: bgColor, color: textColor }}
+      style={{ backgroundColor: bgColor, color: textColor, ...style }}
       onClick={handleClick}
       aria-label={ariaLabel}
       disabled={loading} // Disable while loading
@@ -48,7 +51,13 @@ const TextButton: React.FC<TextButtonProps> = ({
             : 0,
         }}
       >
-        {loading ? <span className="spinner">o</span> : text}
+        {loading ? (
+          <span className="spinner">
+            <MoonLoader size={15} color="white" />
+          </span>
+        ) : (
+          text
+        )}
       </div>
     </button>
   );

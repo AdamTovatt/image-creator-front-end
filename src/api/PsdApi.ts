@@ -30,7 +30,7 @@ export async function updatePsdFile(
 export async function exportPsdFile(
   parameters: ExportParameters,
   imageFiles: File[]
-): Promise<ApiResponse<Blob, MessageResponse>> {
+): Promise<ApiResponse<ArrayBuffer, MessageResponse>> {
   const formData = new FormData();
   formData.append("parametersJson", JSON.stringify(parameters));
 

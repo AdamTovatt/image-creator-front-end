@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PsdLayersList from "../components/PsdLayersList";
 import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo";
-import { listPsdFiles } from "../api/PsdApi";
+import { listPsdFiles, exportPsdFile } from "../api/PsdApi";
 import CenteredMainContainer from "../components/CenteredMainContainer";
 import MultiplePartsMainContentContainer from "../components/MultiplePartsMainContentContainer";
 import TokenHelper from "../helpers/TokenHelper";
+import TextButton from "../components/TextButton";
+import { EditableExportParameters } from "../models/EditableExportParameters";
 
 interface FullPageErrorMessageProps {
   message: string;
@@ -22,11 +24,13 @@ const ExportPage: React.FC = () => {
   const [fileInfo, setFileInfo] = useState<PhotoshopFileInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [exportParameters, setExportParameters] =
+    useState<EditableExportParameters | null>(null);
+
   const navigate = useNavigate();
 
-  // Check if the user is logged in
   useEffect(() => {
-    const token = TokenHelper.getToken(); // Get the token from localStorage using TokenHelper
+    const token = TokenHelper.getToken();
 
     if (!token) {
       navigate("/"); // Redirect to login page if no token exists
@@ -57,6 +61,44 @@ const ExportPage: React.FC = () => {
     fetchFileInfo();
   }, [fileName]);
 
+  const handleExportParametersChange = (
+    parameters: EditableExportParameters
+  ) => {
+    setExportParameters(parameters);
+  };
+
+  const handleExport = async () => {
+    if (!exportParameters) return;
+
+    const { files, ...parameters } = exportParameters; // Exclude files from the JSON payload
+
+    const exportResponse = await exportPsdFile(parameters, files);
+
+    if (exportResponse.success) {
+      // Create a Blob from the ArrayBuffer response
+      const blob = new Blob([exportResponse.data!], {
+        type: "application/octet-stream",
+      });
+
+      // Create a link element to trigger download
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = `${exportParameters.fileName}.psd`; // Default download name
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup the link element
+      document.body.removeChild(link);
+      URL.revokeObjectURL(downloadUrl);
+    } else {
+      console.error(
+        "Export failed:",
+        exportResponse.error || exportResponse.axiosError
+      );
+    }
+  };
+
   const displayMessage = (): string | null => {
     if (loading) return "Loading...";
     else if (errorMessage) return errorMessage;
@@ -72,8 +114,26 @@ const ExportPage: React.FC = () => {
 
   return (
     <CenteredMainContainer>
+      <TextButton
+        text="Back to file list"
+        onClick={async () => {
+          navigate("/psd-files");
+        }}
+        extraVerticalPadding={0.5}
+        style={{ position: "absolute", left: "1rem", top: "1rem" }}
+      />
       <MultiplePartsMainContentContainer>
-        <PsdLayersList fileMetadata={fileInfo!.metadata!} />
+        <PsdLayersList
+          fileMetadata={fileInfo!.metadata!}
+          fileName={fileInfo!.name}
+          onExportParametersChange={handleExportParametersChange}
+        />
+        <TextButton
+          text="Export"
+          onClick={handleExport}
+          extraVerticalPadding={0.5}
+          style={{ marginTop: "1rem" }}
+        />
       </MultiplePartsMainContentContainer>
     </CenteredMainContainer>
   );
