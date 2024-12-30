@@ -6,23 +6,29 @@ import { MessageResponse } from "../models/MessageResponse";
 
 // 1. Upload a PSD file
 export async function uploadPsdFile(
-  psdFile: FormData
+  file: File
 ): Promise<ApiResponse<MessageResponse, MessageResponse>> {
+  const formData = new FormData();
+  formData.append("psdFile", file);
+
   return await apiRequest({
     method: "POST",
     url: "/psd/upload",
-    data: psdFile, // Use FormData for file uploads
+    data: formData, // Use FormData for file uploads
   });
 }
 
 // 2. Update an existing PSD file
 export async function updatePsdFile(
-  psdFile: FormData
+  file: File
 ): Promise<ApiResponse<MessageResponse, MessageResponse>> {
+  const formData = new FormData();
+  formData.append("psdFile", file);
+
   return await apiRequest({
     method: "POST",
     url: "/psd/update",
-    data: psdFile, // Use FormData for file uploads
+    data: formData, // Use FormData for file uploads
   });
 }
 

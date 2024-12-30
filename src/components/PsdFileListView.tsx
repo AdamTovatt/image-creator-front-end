@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import PsdFileListItem from "./PsdFileListItem";
 import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo";
-import { listPsdFiles } from "../api/PsdApi"; // Assuming you have this API function
+import { listPsdFiles, uploadPsdFile } from "../api/PsdApi"; // Assuming you have this API function
 import "./Components.css";
 import { useNavigate } from "react-router-dom";
 import SimpleContainer from "./SimpleContainer";
+import TextButton from "./TextButton";
+import { useUploadFileDialog } from "./UploadFileDialog";
+import { getMessageFromResponse } from "../models/ApiResponse";
+import { useAlert } from "./AlertProvider/UseAlert";
 
 interface PsdFileListViewProps {
   onSelect: (file: PhotoshopFileInfo) => void; // Callback to handle selection
@@ -21,6 +25,8 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { getFileFromUser } = useUploadFileDialog();
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     setInternalSelectedFile(selectedFile); // Sync internal state with selectedFile prop
@@ -63,6 +69,20 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({
 
   return (
     <SimpleContainer style={{ width: "45%" }}>
+      <TextButton
+        extraVerticalPadding={1}
+        text="Upload new file"
+        onClick={async () => {
+          const file = await getFileFromUser();
+
+          if (file) {
+            const uploadResponse = await uploadPsdFile(file);
+            const message = getMessageFromResponse(uploadResponse);
+
+            await showAlert(message);
+          }
+        }}
+      />
       {psdFiles.map((file) => (
         <PsdFileListItem
           key={file.name}

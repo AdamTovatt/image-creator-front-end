@@ -1,14 +1,21 @@
 import { useNavigate } from "react-router-dom";
-import { createMetadata, deletePsdFile, downloadPsdFile } from "../api/PsdApi";
+import {
+  createMetadata,
+  deletePsdFile,
+  downloadPsdFile,
+  updatePsdFile,
+} from "../api/PsdApi";
 import { CircleButtonIcon } from "../constants/CircleButtonIcon";
 import { Color } from "../constants/Color";
 import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo";
 import CircleButton from "./CircleButton";
 import "./Components.css";
-import ImageView from "./ImageView";
+import ImageView, { LoaderType } from "./ImageView";
 import TextButton from "./TextButton";
 import React from "react";
 import { useAlert } from "./AlertProvider/UseAlert";
+import { useUploadFileDialog } from "./UploadFileDialog";
+import { getMessageFromResponse } from "../models/ApiResponse";
 
 type SelectedFileDetailsProps = {
   file: PhotoshopFileInfo;
@@ -67,6 +74,7 @@ const FileHeaderAndButtons: React.FC<FileHeaderAndButtonsProps> = ({
   onRefreshRequested,
 }) => {
   const { showAlert } = useAlert();
+  const { getFileFromUser } = useUploadFileDialog();
 
   const handleDownload = async (fileName: string) => {
     try {
@@ -85,14 +93,16 @@ const FileHeaderAndButtons: React.FC<FileHeaderAndButtonsProps> = ({
         window.URL.revokeObjectURL(url);
       } else {
         if (response.error)
-          alert(`Failed to download file: ${response.error.message}`);
+          await showAlert(`Failed to download file: ${response.error.message}`);
         else if (response.axiosError)
-          alert(`Failed to download file: ${response.axiosError.message}`);
+          await showAlert(
+            `Failed to download file: ${response.axiosError.message}`
+          );
       }
     } catch (error) {
       console.log("Error downloading file:" + error);
       console.log(error);
-      alert("An error occurred while downloading the file.");
+      await showAlert("An error occurred while downloading the file.");
     }
   };
 
@@ -152,7 +162,16 @@ const FileHeaderAndButtons: React.FC<FileHeaderAndButtonsProps> = ({
           backgroundColor={Color.Depth20}
         />
         <CircleButton
-          onClick={async () => {}}
+          onClick={async () => {
+            const file = await getFileFromUser();
+
+            if (file) {
+              const uploadResponse = await updatePsdFile(file);
+              const message = getMessageFromResponse(uploadResponse);
+
+              await showAlert(message);
+            }
+          }}
           ariaLabel="Update file"
           icon={CircleButtonIcon.Upload}
           backgroundColor={Color.Depth20}
@@ -221,6 +240,7 @@ const SelectedFileDetails: React.FC<SelectedFileDetailsProps> = ({
           <ImageView
             imageUrl={file.metadata?.previewUrl}
             onRefreshRequested={handleCreateMetadata}
+            loaderType={LoaderType.SquareLoader}
           />
           <FileHeaderAndButtons
             file={file}

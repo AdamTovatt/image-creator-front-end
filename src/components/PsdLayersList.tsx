@@ -50,8 +50,6 @@ const PsdLayersList: React.FC<PsdLayersListProps> = ({
         updatedFiles.splice(existingFileIndex, 1);
       }
 
-      console.log("Image export");
-      console.log(imageExportProperties);
       updatedImageOptions[updatedLayer.layerName] = {
         fileName: imageFile.name,
         mirror: imageExportProperties?.mirrored ?? false,

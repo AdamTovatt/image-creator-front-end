@@ -1,12 +1,19 @@
-import { BounceLoader } from "react-spinners";
+import { BounceLoader, SquareLoader } from "react-spinners";
 import { CircleButtonIcon } from "../constants/CircleButtonIcon";
 import CircleButton from "./CircleButton";
 import { Color } from "../constants/Color";
 import { useEffect, useRef, useState } from "react";
 
+// eslint-disable-next-line react-refresh/only-export-components
+export enum LoaderType {
+  BounceLoader,
+  SquareLoader,
+}
+
 interface ImageViewProps {
   imageUrl?: string;
   loading?: boolean;
+  loaderType: LoaderType;
   onRefreshRequested?: () => Promise<void>;
 }
 
@@ -14,13 +21,14 @@ interface TiledLoaderProps {
   color: Color;
   opacity: number;
   tileCount: number;
+  loaderType: LoaderType;
   backgroundImageUrl?: string;
 }
 
 const TiledLoader: React.FC<TiledLoaderProps> = ({
-  color,
   tileCount,
   opacity,
+  loaderType,
   backgroundImageUrl,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -81,12 +89,21 @@ const TiledLoader: React.FC<TiledLoaderProps> = ({
           }}
         >
           {Array.from({ length: tileCount }).map((_, colIndex) => (
-            <BounceLoader
-              key={`${rowIndex}-${colIndex}`}
-              size={tileSize}
-              color={color}
-              speedMultiplier={0.8}
-            />
+            <div key={`${rowIndex}-${colIndex}`}>
+              {loaderType === LoaderType.BounceLoader ? (
+                <BounceLoader
+                  size={tileSize}
+                  color={"rgba(255, 255, 255, 0.7)"}
+                  speedMultiplier={0.8}
+                />
+              ) : (
+                <SquareLoader
+                  size={tileSize}
+                  color={"rgba(255, 255, 255, 0.7)"}
+                  speedMultiplier={0.8}
+                />
+              )}
+            </div>
           ))}
         </div>
       ))}
@@ -97,6 +114,7 @@ const TiledLoader: React.FC<TiledLoaderProps> = ({
 const ImageView: React.FC<ImageViewProps> = ({
   imageUrl,
   loading,
+  loaderType,
   onRefreshRequested,
 }) => {
   return (
@@ -127,8 +145,9 @@ const ImageView: React.FC<ImageViewProps> = ({
         {loading ? (
           <TiledLoader
             color={Color.White}
-            tileCount={4}
-            opacity={0.2}
+            tileCount={8}
+            opacity={0.5}
+            loaderType={loaderType}
             backgroundImageUrl={imageUrl}
           />
         ) : (

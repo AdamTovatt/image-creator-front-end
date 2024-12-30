@@ -29,9 +29,14 @@ export const AlertProvider: React.FC<AlertProviderProps> = ({ children }) => {
     ...buttonLabels: string[]
   ): Promise<string | null> => {
     return new Promise<string | null>((resolve) => {
+      const buttons =
+        buttonLabels.length > 0
+          ? buttonLabels.map((label) => ({ label, value: label }))
+          : [{ label: "Ok", value: "Ok" }];
+
       setAlertOptions({
         message,
-        buttons: buttonLabels.map((label) => ({ label, value: label })),
+        buttons,
       });
       setVisible(true);
       setResolver(() => resolve);

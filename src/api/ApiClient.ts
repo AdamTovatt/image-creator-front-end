@@ -4,7 +4,7 @@ import TokenHelper from "../helpers/TokenHelper";
 
 const apiClient = axios.create({
   baseURL: "https://localhost:5001",
-  timeout: 60000,
+  timeout: 360000,
 });
 
 // Axios request interceptor to add the auth token

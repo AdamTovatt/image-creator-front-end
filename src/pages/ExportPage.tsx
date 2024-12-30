@@ -8,9 +8,10 @@ import MultiplePartsMainContentContainer from "../components/MultiplePartsMainCo
 import TokenHelper from "../helpers/TokenHelper";
 import TextButton from "../components/TextButton";
 import { EditableExportParameters } from "../models/EditableExportParameters";
-import ImageView from "../components/ImageView";
+import ImageView, { LoaderType } from "../components/ImageView";
 import { Color } from "../constants/Color";
 import "../index.css";
+import { useAlert } from "../components/AlertProvider/UseAlert";
 
 interface FullPageErrorMessageProps {
   message: string;
@@ -32,6 +33,7 @@ const ExportPage: React.FC = () => {
   const [previewUrl, setPreviewUrl] = useState<string | undefined>();
   const [hasGenerated, setHasGenerated] = useState<boolean>(false);
   const [currentlyExporting, setCurrentlyExporting] = useState<boolean>(false);
+  const { showAlert } = useAlert();
 
   const navigate = useNavigate();
 
@@ -103,9 +105,13 @@ const ExportPage: React.FC = () => {
           "Export failed:",
           exportResponse.error || exportResponse.axiosError
         );
+        await showAlert(
+          "Export failed, an unexpected error occurred. Check the console log or networks tab for more info."
+        );
       }
     } catch (error) {
       console.log("Error during export:", error);
+      await showAlert("Error during export: " + error);
     } finally {
       setCurrentlyExporting(false);
     }
@@ -149,7 +155,11 @@ const ExportPage: React.FC = () => {
               height: "100%",
             }}
           >
-            <ImageView imageUrl={previewUrl} loading={currentlyExporting} />
+            <ImageView
+              imageUrl={previewUrl}
+              loading={currentlyExporting}
+              loaderType={LoaderType.BounceLoader}
+            />
             <div className="vertical-list">
               <TextButton
                 extraVerticalPadding={0.5}
