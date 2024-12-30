@@ -56,6 +56,12 @@ h1 {
   gap: 1rem;
 }
 
+.horizontal-equal-spacing-flex {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .full-size-horizontal-list {
   justify-content: space-between;
   width: 100%;
@@ -87,4 +93,23 @@ h1 {
   background-color: var(--depth20);
   border-radius: 10px;
   font-size: 0.875rem;
+}
+
+.input-element {
+  font-family: inherit;
+  font-size: inherit;
+  border-radius: 10px;
+  padding: 0.5rem;
+  border: none;
+  resize: none;
+  background-color: var(--depth25);
+  color: var(--white);
+}
+
+.input-element:focus {
+  outline: rgba(255, 255, 255, 0.1) solid 2px;
+}
+
+.input-element:hover {
+  transform: scale(1.035);
 }

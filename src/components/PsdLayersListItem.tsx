@@ -3,18 +3,30 @@ import { CircleButtonIcon } from "../constants/CircleButtonIcon";
 import { formatLayerName } from "../helpers/LayerNameHelper";
 import { PhotoshopLayer } from "../models/PhotoshopLayer";
 import CircleButton from "./CircleButton";
-import { Color } from "../constants/Color";
+import "../index.css";
+import NumberInput from "./NumberInput";
+import BooleanInput from "./BooleanInput";
+import { ImageExportProperties } from "../models/ImageExportProperties";
 
 interface PsdLayersListItemProps {
   layerData: PhotoshopLayer;
-  onUpdateLayer: (updatedLayer: PhotoshopLayer, imageFile?: File) => void;
+  onUpdateLayer: (
+    updatedLayer: PhotoshopLayer,
+    imageFile?: File,
+    imageExportProperties?: ImageExportProperties
+  ) => void;
 }
 
 interface LayerProps {
   layerData: PhotoshopLayer;
   editing: boolean;
-  onChange: (updatedLayer: PhotoshopLayer, imageFile?: File) => void;
+  onChange: (
+    updatedLayer: PhotoshopLayer,
+    imageFile?: File,
+    imageExportProperties?: ImageExportProperties
+  ) => void;
   fileName?: string;
+  imageExportProperties?: ImageExportProperties;
 }
 
 const TextLayer: React.FC<LayerProps> = ({ layerData, editing, onChange }) => {
@@ -35,20 +47,13 @@ const TextLayer: React.FC<LayerProps> = ({ layerData, editing, onChange }) => {
   return editing ? (
     <div style={{ paddingRight: "1rem", marginTop: "0.25rem" }}>
       <textarea
+        className="input-element"
         value={textContent}
         onChange={handleTextChange}
         placeholder="Edit text content"
         rows={4} // Adjust rows as needed
         style={{
           width: "calc(100% - 0.5rem)",
-          fontFamily: "inherit",
-          fontSize: "inherit",
-          borderRadius: "10px",
-          padding: "0.25rem",
-          border: "none",
-          resize: "none",
-          backgroundColor: Color.Depth25,
-          color: Color.White,
         }}
       />
     </div>
@@ -64,17 +69,63 @@ const ImageLayer: React.FC<LayerProps> = ({
   editing,
   onChange,
   fileName,
+  imageExportProperties,
 }) => {
+  const [localImageExportProperties, setLocalImageExportProperties] =
+    useState<ImageExportProperties>(
+      imageExportProperties || { shiftX: 0, shiftY: 0, mirrored: false }
+    );
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file) {
-      onChange(layerData, file); // Notify parent of the new file
+      onChange(layerData, file, localImageExportProperties); // Pass image export properties
     }
+  };
+
+  const handleExportPropertyChange = (
+    property: keyof ImageExportProperties,
+    value: number | boolean
+  ) => {
+    const updatedProperties = {
+      ...localImageExportProperties,
+      [property]: value,
+    };
+    setLocalImageExportProperties(updatedProperties);
+    onChange(layerData, undefined, updatedProperties); // Notify parent of export properties change
   };
 
   return editing ? (
     <div>
-      <input type="file" onChange={handleImageUpload} />
+      <input
+        style={{ marginTop: "1rem" }}
+        type="file"
+        onChange={handleImageUpload}
+      />
+      <div
+        className="flex-container horizontal-equal-spacing-flex"
+        style={{ marginTop: "1rem" }}
+      >
+        <NumberInput
+          externalValue={localImageExportProperties.shiftX}
+          initialValue={localImageExportProperties.shiftX}
+          name="X-shift:"
+          onChange={(value) => handleExportPropertyChange("shiftX", value)}
+        />
+        <div style={{ minWidth: "0.25rem" }}></div>
+        <NumberInput
+          externalValue={localImageExportProperties.shiftY}
+          initialValue={localImageExportProperties.shiftY}
+          name="Y-shift:"
+          onChange={(value) => handleExportPropertyChange("shiftY", value)}
+        />
+        <div style={{ minWidth: "0.25rem" }}></div>
+        <BooleanInput
+          initialValue={localImageExportProperties.mirrored}
+          name="Mirrored:"
+          onChange={(value) => handleExportPropertyChange("mirrored", value)}
+        />
+      </div>
     </div>
   ) : (
     <div style={{ height: "1.2rem", overflow: "hidden" }}>
@@ -94,24 +145,41 @@ const PsdLayersListItem: React.FC<PsdLayersListItemProps> = ({
   const [lastSavedImageFile, setLastSavedImageFile] = useState<File | null>(
     null
   );
+  const [localImageExportProperties, setLocalImageExportProperties] =
+    useState<ImageExportProperties | null>(null);
+  const [lastSavedImageExportProperties, setLastSavedImageExportProperties] =
+    useState<ImageExportProperties | null>(null);
 
   const handleSave = async () => {
     setEditing(false);
     setLastSavedLayerData(localLayerData); // Update last saved layer data
     setLastSavedImageFile(localImageFile); // Update last saved image file
-    onUpdateLayer(localLayerData, localImageFile || undefined); // Notify parent of changes
+    setLastSavedImageExportProperties(localImageExportProperties);
+    onUpdateLayer(
+      localLayerData,
+      localImageFile || undefined,
+      localImageExportProperties || undefined
+    ); // Notify parent of changes
   };
 
   const handleCancel = async () => {
     setEditing(false);
     setLocalLayerData(lastSavedLayerData); // Revert to the last saved state
     setLocalImageFile(lastSavedImageFile); // Revert to the last saved file
+    setLocalImageExportProperties(lastSavedImageExportProperties);
   };
 
-  const handleLayerChange = (updatedLayer: PhotoshopLayer, file?: File) => {
+  const handleLayerChange = (
+    updatedLayer: PhotoshopLayer,
+    file?: File,
+    imageExportProperties?: ImageExportProperties
+  ) => {
     setLocalLayerData(updatedLayer);
     if (file) {
       setLocalImageFile(file); // Temporarily store selected file
+    }
+    if (imageExportProperties) {
+      setLocalImageExportProperties(imageExportProperties);
     }
   };
 

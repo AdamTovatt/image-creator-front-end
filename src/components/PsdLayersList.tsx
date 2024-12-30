@@ -3,6 +3,7 @@ import { PhotoshopFileMetadata } from "../models/PhotoshopFileMetadata";
 import PsdLayersListItem from "./PsdLayersListItem";
 import SimpleContainer from "./SimpleContainer";
 import { EditableExportParameters } from "../models/EditableExportParameters";
+import { ImageExportProperties } from "../models/ImageExportProperties";
 
 interface PsdLayersListProps {
   fileMetadata: PhotoshopFileMetadata;
@@ -25,7 +26,8 @@ const PsdLayersList: React.FC<PsdLayersListProps> = ({
 
   const handleLayerUpdate = (
     updatedLayer: PhotoshopFileMetadata["layers"][0],
-    imageFile?: File
+    imageFile?: File,
+    imageExportProperties?: ImageExportProperties
   ) => {
     const updatedTextOptions = { ...exportParameters.textOptions };
     const updatedImageOptions = { ...exportParameters.imageOptions };
@@ -39,11 +41,22 @@ const PsdLayersList: React.FC<PsdLayersListProps> = ({
     }
 
     if (updatedLayer.isImageLayer && imageFile) {
+      // Remove any existing file for this layer
+      const existingFileIndex = updatedFiles.findIndex(
+        (file) =>
+          file.name === updatedImageOptions[updatedLayer.layerName]?.fileName
+      );
+      if (existingFileIndex !== -1) {
+        updatedFiles.splice(existingFileIndex, 1);
+      }
+
+      console.log("Image export");
+      console.log(imageExportProperties);
       updatedImageOptions[updatedLayer.layerName] = {
         fileName: imageFile.name,
-        mirror: false,
-        shiftX: 0,
-        shiftY: 0,
+        mirror: imageExportProperties?.mirrored ?? false,
+        shiftX: imageExportProperties?.shiftX ?? 0,
+        shiftY: imageExportProperties?.shiftY ?? 0,
       };
       updatedFiles.push(imageFile);
     } else if (updatedLayer.isImageLayer) {
