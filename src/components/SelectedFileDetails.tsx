@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { createMetadata, downloadPsdFile } from "../api/PsdApi";
+import { createMetadata, deletePsdFile, downloadPsdFile } from "../api/PsdApi";
 import { CircleButtonIcon } from "../constants/CircleButtonIcon";
 import { Color } from "../constants/Color";
 import { PhotoshopFileInfo } from "../models/PhotoshopFileInfo";
@@ -128,11 +128,24 @@ const FileHeaderAndButtons: React.FC<FileHeaderAndButtonsProps> = ({
         <CircleButton
           onClick={async () => {
             const response = await showAlert(
-              "Are you sure you want to delete?",
+              `Are you sure you want to delete ${file.name}? This can not be undone.`,
               "Yes",
               "No"
             );
-            console.log("User clicked:", response);
+
+            if (response === "Yes") {
+              const deleteResponse = await deletePsdFile(file.name);
+
+              let messageToShow = null;
+              if (deleteResponse.data?.message)
+                messageToShow = deleteResponse.data?.message;
+              else if (deleteResponse.error?.message)
+                messageToShow = deleteResponse.error?.message;
+              else if (deleteResponse.axiosError?.message)
+                messageToShow = deleteResponse.axiosError?.message;
+
+              if (messageToShow) await showAlert(messageToShow, "Ok");
+            }
           }}
           ariaLabel="Delete file"
           icon={CircleButtonIcon.Trash}

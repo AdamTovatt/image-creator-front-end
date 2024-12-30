@@ -1,3 +1,6 @@
 export interface AlertContextType {
-  showAlert: (message: string, ...buttonLabels: string[]) => Promise<string>;
+  showAlert: (
+    message: string,
+    ...buttonLabels: string[]
+  ) => Promise<string | null>;
 }
