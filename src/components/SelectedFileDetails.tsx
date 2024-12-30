@@ -8,6 +8,7 @@ import "./Components.css";
 import ImageView from "./ImageView";
 import TextButton from "./TextButton";
 import React from "react";
+import { useAlert } from "./AlertProvider/UseAlert";
 
 type SelectedFileDetailsProps = {
   file: PhotoshopFileInfo;
@@ -65,6 +66,8 @@ const FileHeaderAndButtons: React.FC<FileHeaderAndButtonsProps> = ({
   file,
   onRefreshRequested,
 }) => {
+  const { showAlert } = useAlert();
+
   const handleDownload = async (fileName: string) => {
     try {
       const response = await downloadPsdFile(fileName);
@@ -123,7 +126,14 @@ const FileHeaderAndButtons: React.FC<FileHeaderAndButtonsProps> = ({
         }}
       >
         <CircleButton
-          onClick={async () => {}}
+          onClick={async () => {
+            const response = await showAlert(
+              "Are you sure you want to delete?",
+              "Yes",
+              "No"
+            );
+            console.log("User clicked:", response);
+          }}
           ariaLabel="Delete file"
           icon={CircleButtonIcon.Trash}
           backgroundColor={Color.Depth20}
