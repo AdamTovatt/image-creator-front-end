@@ -33,7 +33,12 @@ const PsdFileListItem: React.FC<PsdFileListItemProps> = ({
         <img
           src={metadata.thumbnailUrl}
           alt="Thumbnail"
-          style={{ maxWidth: 64, borderRadius: "6px" }}
+          style={{
+            width: 64,
+            height: 64,
+            objectFit: "contain",
+            borderRadius: "6px",
+          }}
         />
       )}
     </div>
