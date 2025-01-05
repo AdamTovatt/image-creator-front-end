@@ -9,6 +9,8 @@ import TextButton from "./TextButton";
 import { useUploadFileDialog } from "./UploadFileDialog";
 import { getMessageFromResponse } from "../models/ApiResponse";
 import { useAlert } from "./AlertProvider/UseAlert";
+import { MoonLoader } from "react-spinners";
+import { Color } from "../constants/Color";
 
 interface PsdFileListViewProps {
   onSelect: (file: PhotoshopFileInfo) => void; // Callback to handle selection
@@ -64,8 +66,27 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({
     onSelect(file); // Notify parent of the selected file
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading || error)
+    return (
+      <div
+        className="flex-container"
+        style={{ justifyContent: "center", flex: 1 }}
+      >
+        {error ? (
+          error
+        ) : (
+          <div className="vertical-list">
+            <div>Loading PSD files...</div>
+            <div
+              className="flex-container"
+              style={{ justifyContent: "center", marginTop: "1rem" }}
+            >
+              <MoonLoader color={Color.White} />
+            </div>
+          </div>
+        )}
+      </div>
+    );
 
   return (
     <SimpleContainer style={{ width: "45%" }}>
