@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
     try {
       const response = await generateMagicLink({
         email,
-        baseUrl: "http://localhost:5173/?magicLink=", // Updated base URL
+        baseUrl: "https://pr.wermlandsnation.se/?magicLink=", // Updated base URL
         productName: "Image Creator",
         dateAndTime: formatDate(new Date()),
       });
