@@ -40,7 +40,12 @@ const TextButton: React.FC<TextButtonProps> = ({
   return (
     <button
       className={`text-button ${fullWidth ? "full-width" : ""}`}
-      style={{ backgroundColor: bgColor, color: textColor, ...style }}
+      style={{
+        minHeight: `${(extraVerticalPadding + 1) * 2}rem`,
+        backgroundColor: bgColor,
+        color: textColor,
+        ...style,
+      }}
       onClick={handleClick}
       aria-label={ariaLabel ? ariaLabel : text}
       title={ariaLabel ? ariaLabel : text}

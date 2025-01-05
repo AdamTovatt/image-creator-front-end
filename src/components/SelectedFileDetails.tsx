@@ -16,6 +16,7 @@ import React from "react";
 import { useAlert } from "./AlertProvider/UseAlert";
 import { useUploadFileDialog } from "./UploadFileDialog";
 import { getMessageFromResponse } from "../models/ApiResponse";
+import useIsMobile from "../helpers/UseIsMobile";
 
 type SelectedFileDetailsProps = {
   file: PhotoshopFileInfo;
@@ -25,6 +26,7 @@ type SelectedFileDetailsProps = {
 type FileHeaderAndButtonsProps = {
   file: PhotoshopFileInfo;
   onRefreshRequested: () => Promise<void>;
+  isMobile: boolean;
 };
 
 type BottomButtonProps = {
@@ -46,7 +48,9 @@ const BottomButton: React.FC<BottomButtonProps> = ({
         flexDirection: "column",
       }}
     >
-      <div style={{ marginBottom: "0.5rem" }}>{file.name}</div>
+      <div style={{ marginBottom: "0.5rem", lineBreak: "anywhere" }}>
+        {file.name}
+      </div>
       <div style={{ display: "flex", gap: "0.5rem" }}>
         <TextButton
           text="Close"
@@ -72,6 +76,7 @@ const BottomButton: React.FC<BottomButtonProps> = ({
 const FileHeaderAndButtons: React.FC<FileHeaderAndButtonsProps> = ({
   file,
   onRefreshRequested,
+  isMobile,
 }) => {
   const { showAlert } = useAlert();
   const { getFileFromUser } = useUploadFileDialog();
@@ -112,6 +117,7 @@ const FileHeaderAndButtons: React.FC<FileHeaderAndButtonsProps> = ({
         display: "flex",
         justifyContent: "space-between",
         marginTop: "1rem",
+        flexDirection: isMobile ? "column" : "row",
       }}
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -131,7 +137,8 @@ const FileHeaderAndButtons: React.FC<FileHeaderAndButtonsProps> = ({
       <div
         style={{
           display: "flex",
-          justifyContent: "flex-end",
+          marginTop: isMobile ? "1rem" : 0,
+          justifyContent: isMobile ? "space-evenly" : "flex-end",
           gap: "0.75rem",
         }}
       >
@@ -199,6 +206,7 @@ const SelectedFileDetails: React.FC<SelectedFileDetailsProps> = ({
 }) => {
   const navigate = useNavigate();
   const createMetadataInBackground = true;
+  const isMobile = useIsMobile();
 
   const handleCreateMetadata = async () => {
     if (file.name) {
@@ -243,6 +251,7 @@ const SelectedFileDetails: React.FC<SelectedFileDetailsProps> = ({
             loaderType={LoaderType.SquareLoader}
           />
           <FileHeaderAndButtons
+            isMobile={isMobile}
             file={file}
             onRefreshRequested={handleCreateMetadata}
           />

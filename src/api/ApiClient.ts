@@ -3,7 +3,7 @@ import { ApiResponse } from "../models/ApiResponse";
 import TokenHelper from "../helpers/TokenHelper";
 
 const apiClient = axios.create({
-  baseURL: "https://localhost:5001",
+  baseURL: "https://sakurapi.se/image-creator",
   timeout: 360000,
 });
 

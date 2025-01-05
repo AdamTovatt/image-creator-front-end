@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./SingleLineInput.css";
 import CircleButton from "./CircleButton";
 import { CircleButtonIcon } from "../constants/CircleButtonIcon";
+import useIsMobile from "../helpers/UseIsMobile";
 
 interface SingleLineInputProps {
   type?: string; // Input type (default is "text")
@@ -11,6 +12,7 @@ interface SingleLineInputProps {
   placeholder?: string; // Placeholder text
   buttonIcon?: CircleButtonIcon; // Enum value for the icon
   buttonAriaLabel?: string; // Accessibility label
+  isMobile?: boolean;
 }
 
 const SingleLineInput: React.FC<SingleLineInputProps> = ({
@@ -21,8 +23,12 @@ const SingleLineInput: React.FC<SingleLineInputProps> = ({
   onSubmit,
   buttonIcon,
   buttonAriaLabel,
+  isMobile,
 }) => {
   const [loading, setLoading] = useState(false);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  if (isMobile === undefined) isMobile = useIsMobile();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
@@ -53,6 +59,7 @@ const SingleLineInput: React.FC<SingleLineInputProps> = ({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className="single-line-input"
+        style={isMobile ? { width: "unset" } : undefined}
       />
       <CircleButton
         onClick={handleSubmit}

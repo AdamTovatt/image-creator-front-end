@@ -12,6 +12,7 @@ import ImageView, { LoaderType } from "../components/ImageView";
 import { Color } from "../constants/Color";
 import "../index.css";
 import { useAlert } from "../components/AlertProvider/UseAlert";
+import useIsMobile from "../helpers/UseIsMobile";
 
 interface FullPageErrorMessageProps {
   message: string;
@@ -34,6 +35,7 @@ const ExportPage: React.FC = () => {
   const [hasGenerated, setHasGenerated] = useState<boolean>(false);
   const [currentlyExporting, setCurrentlyExporting] = useState<boolean>(false);
   const { showAlert } = useAlert();
+  const isMobile = useIsMobile();
 
   const navigate = useNavigate();
 
@@ -130,75 +132,111 @@ const ExportPage: React.FC = () => {
   if (messageToDisplay)
     return <FullPageErrorMessage message={messageToDisplay} />;
 
-  return (
-    <CenteredMainContainer>
-      <TextButton
-        text="Back to file list"
-        onClick={async () => {
-          navigate("/psd-files");
+  const ImageFrame: React.FC = () => {
+    return (
+      <div
+        className="simple-container"
+        style={{
+          flex: isMobile ? "1 1 100%" : "1",
+          borderRadius: isMobile ? "0" : undefined,
         }}
-        extraVerticalPadding={0.5}
-        style={{ position: "absolute", left: "1rem", top: "1rem" }}
-      />
-      <MultiplePartsMainContentContainer>
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "100%",
+          }}
+        >
+          <ImageView
+            imageUrl={previewUrl}
+            loading={currentlyExporting}
+            loaderType={LoaderType.BounceLoader}
+          />
+          <div className="vertical-list">
+            <div style={{ minHeight: "1rem" }}></div>
+            <TextButton
+              extraVerticalPadding={0.5}
+              fullWidth={true}
+              text="Generate image"
+              onClick={handleExport}
+              bgColor={Color.Purple}
+            />
+            {hasGenerated ? (
+              <TextButton
+                ariaLabel={
+                  hasGenerated
+                    ? "Download image"
+                    : "Need to generate image first"
+                }
+                disabled={!hasGenerated}
+                extraVerticalPadding={0.5}
+                fullWidth={true}
+                text="Download image"
+                onClick={async () => {
+                  if (previewUrl) {
+                    const anchor = document.createElement("a");
+                    anchor.href = previewUrl;
+                    anchor.download = getCorrectFileName(
+                      fileName || "exported-file",
+                      ".jpg"
+                    ); // Default file name
+                    anchor.click();
+                    URL.revokeObjectURL(previewUrl); // Clean up URL object
+                  } else {
+                    console.error("No preview URL available for download.");
+                  }
+                }}
+                bgColor={Color.Neutral}
+              />
+            ) : null}
+          </div>
+          <div style={{ minHeight: "1rem" }}></div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <CenteredMainContainer margin={isMobile ? 0 : undefined}>
+      {isMobile ? null : (
+        <TextButton
+          text="Back to file list"
+          onClick={async () => {
+            navigate("/psd-files");
+          }}
+          extraVerticalPadding={0.5}
+          style={{ position: "absolute", left: "1rem", top: "1rem" }}
+        />
+      )}
+      <MultiplePartsMainContentContainer
+        style={{
+          flexDirection: isMobile ? "column" : "row",
+          display: isMobile ? "block" : "flex",
+        }}
+      >
+        {isMobile ? (
+          <>
+            <TextButton
+              text="Back to file list"
+              onClick={async () => {
+                navigate("/psd-files");
+              }}
+              extraVerticalPadding={0.5}
+              style={{ marginBottom: "0.5rem", marginTop: "0.5rem" }}
+              fullWidth={true}
+            />
+            <ImageFrame />
+          </>
+        ) : null}
         <PsdLayersList
+          isMobile={isMobile}
           fileMetadata={fileInfo!.metadata!}
           fileName={fileInfo!.name}
           onExportParametersChange={handleExportParametersChange}
         />
-        <div className="simple-container" style={{ flex: 1 }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              height: "100%",
-            }}
-          >
-            <ImageView
-              imageUrl={previewUrl}
-              loading={currentlyExporting}
-              loaderType={LoaderType.BounceLoader}
-            />
-            <div className="vertical-list">
-              <TextButton
-                extraVerticalPadding={0.5}
-                fullWidth={true}
-                text="Generate image"
-                onClick={handleExport}
-                bgColor={Color.Purple}
-              />
-              {hasGenerated ? (
-                <TextButton
-                  ariaLabel={
-                    hasGenerated
-                      ? "Download image"
-                      : "Need to generate image first"
-                  }
-                  disabled={!hasGenerated}
-                  extraVerticalPadding={0.5}
-                  fullWidth={true}
-                  text="Download image"
-                  onClick={async () => {
-                    if (previewUrl) {
-                      const anchor = document.createElement("a");
-                      anchor.href = previewUrl;
-                      anchor.download = getCorrectFileName(
-                        fileName || "exported-file",
-                        ".jpg"
-                      ); // Default file name
-                      anchor.click();
-                      URL.revokeObjectURL(previewUrl); // Clean up URL object
-                    } else {
-                      console.error("No preview URL available for download.");
-                    }
-                  }}
-                  bgColor={Color.Neutral}
-                />
-              ) : null}
-            </div>
-          </div>
-        </div>
+        {!isMobile ? <ImageFrame /> : null}
       </MultiplePartsMainContentContainer>
     </CenteredMainContainer>
   );

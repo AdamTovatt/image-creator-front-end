@@ -8,12 +8,14 @@ import "./PsdFilesPage.css";
 import SelectedFileDetails from "../components/SelectedFileDetails";
 import CenteredMainContainer from "../components/CenteredMainContainer";
 import MultiplePartsMainContentContainer from "../components/MultiplePartsMainContentContainer";
+import useIsMobile from "../helpers/UseIsMobile";
 
 const PsdFilesPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<PhotoshopFileInfo | null>(
     null
   ); // Correct typing for selected file
   const navigate = useNavigate(); // Initialize useNavigate for navigation
+  const isMobile = useIsMobile();
 
   // Check if the user is logged in
   useEffect(() => {
@@ -28,11 +30,31 @@ const PsdFilesPage: React.FC = () => {
     setSelectedFile(file);
   };
 
-  return (
-    <div>
+  if (isMobile) {
+    return (
+      <CenteredMainContainer margin={0}>
+        {selectedFile ? (
+          <SelectedFileDetails
+            file={selectedFile}
+            closeRequested={async () => {
+              setSelectedFile(null);
+            }}
+          />
+        ) : (
+          <PsdFileListView
+            widthPercentage={100}
+            selectedFile={selectedFile}
+            onSelect={handleFileSelect}
+          />
+        )}
+      </CenteredMainContainer>
+    );
+  } else {
+    return (
       <CenteredMainContainer>
         <MultiplePartsMainContentContainer>
           <PsdFileListView
+            widthPercentage={45}
             selectedFile={selectedFile}
             onSelect={handleFileSelect}
           />
@@ -51,8 +73,8 @@ const PsdFilesPage: React.FC = () => {
           )}
         </MultiplePartsMainContentContainer>
       </CenteredMainContainer>
-    </div>
-  );
+    );
+  }
 };
 
 export default PsdFilesPage;

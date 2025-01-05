@@ -9,12 +9,14 @@ interface PsdLayersListProps {
   fileMetadata: PhotoshopFileMetadata;
   fileName: string;
   onExportParametersChange: (parameters: EditableExportParameters) => void;
+  isMobile: boolean;
 }
 
 const PsdLayersList: React.FC<PsdLayersListProps> = ({
   fileMetadata,
   fileName,
   onExportParametersChange,
+  isMobile,
 }) => {
   const [exportParameters, setExportParameters] =
     useState<EditableExportParameters>({
@@ -82,7 +84,13 @@ const PsdLayersList: React.FC<PsdLayersListProps> = ({
     ));
 
   return (
-    <SimpleContainer style={{ width: "45%" }}>
+    <SimpleContainer
+      style={{
+        width: isMobile ? "unset" : "45%",
+        maxWidth: "100%",
+        borderRadius: isMobile ? "0" : undefined,
+      }}
+    >
       <div style={{ fontSize: "0.875rem" }}>Recommended for change:</div>
       {renderLayers(
         fileMetadata.layers.filter((layer) => layer.isRecommendedForChanging)

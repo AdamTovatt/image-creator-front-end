@@ -11,15 +11,18 @@ import { getMessageFromResponse } from "../models/ApiResponse";
 import { useAlert } from "./AlertProvider/UseAlert";
 import { MoonLoader } from "react-spinners";
 import { Color } from "../constants/Color";
+import useIsMobile from "../helpers/UseIsMobile";
 
 interface PsdFileListViewProps {
   onSelect: (file: PhotoshopFileInfo) => void; // Callback to handle selection
   selectedFile: PhotoshopFileInfo | null; // Add selectedFile prop
+  widthPercentage: number;
 }
 
 const PsdFileListView: React.FC<PsdFileListViewProps> = ({
   onSelect,
   selectedFile, // Receive selectedFile prop
+  widthPercentage,
 }) => {
   const [psdFiles, setPsdFiles] = useState<PhotoshopFileInfo[]>([]);
   const [internalSelectedFile, setInternalSelectedFile] =
@@ -29,6 +32,7 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({
   const navigate = useNavigate();
   const { getFileFromUser } = useUploadFileDialog();
   const { showAlert } = useAlert();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     setInternalSelectedFile(selectedFile); // Sync internal state with selectedFile prop
@@ -89,7 +93,7 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({
     );
 
   return (
-    <SimpleContainer style={{ width: "45%" }}>
+    <SimpleContainer style={{ width: `${widthPercentage}%` }}>
       <TextButton
         extraVerticalPadding={1}
         text="Upload new file"
@@ -106,6 +110,7 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({
       />
       {psdFiles.map((file) => (
         <PsdFileListItem
+          isMobile={isMobile}
           key={file.name}
           file={file}
           isSelected={file === internalSelectedFile}
