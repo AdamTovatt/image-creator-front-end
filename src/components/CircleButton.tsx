@@ -87,7 +87,9 @@ const CircleButton: React.FC<CircleButtonProps> = ({
           ? externalLoadingState
           : internalLoadingState
       ) ? (
-        <MoonLoader size={15} color="white" />
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <MoonLoader size={15} color="white" />
+        </div>
       ) : (
         <span className="icon">{CircleButtonIconMap[icon]}</span>
       )}

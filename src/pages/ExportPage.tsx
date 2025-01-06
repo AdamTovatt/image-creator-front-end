@@ -192,7 +192,7 @@ const ExportPage: React.FC = () => {
               />
             ) : null}
           </div>
-          <div style={{ minHeight: "1rem" }}></div>
+          {isMobile ? <div style={{ minHeight: "1rem" }}></div> : null}
         </div>
       </div>
     );

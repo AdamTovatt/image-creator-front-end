@@ -1,6 +1,6 @@
 .circle-button {
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
     background-color: var(--button-bg-color);
     color: var(--white);
@@ -17,15 +17,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    line-height: 0; /* Prevent any extra spacing caused by line-height */
-    height: 100%; /* Ensure it aligns with the button height */
   }
   
   .circle-button svg {
-    display: block; /* Ensures no extra inline space around the SVG */
-    height: 80%; /* Adjust size relative to the button */
-    width: 80%; /* Adjust size relative to the button */
-    margin-left: 2%; /* Nudge it slightly to center horizontally */
+    display: flex; /* Ensures no extra inline space around the SVG */
+    height: 1.5rem; /* Adjust size relative to the button */
+    width: 1.5rem; /* Adjust size relative to the button */
   }
   
   .circle-button:disabled {

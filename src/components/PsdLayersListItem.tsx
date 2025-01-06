@@ -185,7 +185,7 @@ const PsdLayersListItem: React.FC<PsdLayersListItemProps> = ({
 
   return (
     <div className="inner-flex-element">
-      <div style={{ width: "calc(100% - 3rem)" }}>
+      <div style={{ width: "calc(80% - 3rem)" }}>
         <div style={{ opacity: 0.7 }}>
           {formatLayerName(layerData.layerName)}:
         </div>
@@ -205,7 +205,14 @@ const PsdLayersListItem: React.FC<PsdLayersListItemProps> = ({
         )}
       </div>
       {editing ? (
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div
+          style={{
+            position: "relative",
+            right: "0",
+            display: "flex",
+            gap: "0.5rem",
+          }}
+        >
           <CircleButton
             onClick={handleCancel}
             ariaLabel={"Cancel changes for layer " + layerData.layerName}

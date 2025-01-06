@@ -22,7 +22,7 @@ const PsdFileListItem: React.FC<PsdFileListItemProps> = ({
       <div
         className={`psd-file-list-item ${isSelected ? "selected" : ""}`}
         onClick={onClick}
-        style={{ flexDirection: "column" }}
+        style={{ flexDirection: "column", opacity: isMobile ? 1 : undefined }}
       >
         <div className="text-part">
           <div style={{ lineBreak: "anywhere" }}>{name}</div>
