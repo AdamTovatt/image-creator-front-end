@@ -7,6 +7,7 @@ import { CircleButtonIcon } from "../constants/CircleButtonIcon";
 import TokenHelper from "../helpers/TokenHelper"; // Import the TokenHelper class
 import "./LoginPage.css";
 import { MoonLoader } from "react-spinners";
+import TypewriterText from "../components/TypewriterText";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -115,7 +116,9 @@ const LoginPage: React.FC = () => {
             </>
           ) : (
             <>
-              <h1 className="login-title">Enter your email</h1>
+              <h1 className="login-title">
+                <TypewriterText>Enter your email</TypewriterText>
+              </h1>
               <SingleLineInput
                 type="email"
                 value={email}
