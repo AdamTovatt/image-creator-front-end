@@ -104,7 +104,13 @@ const PsdFileListView: React.FC<PsdFileListViewProps> = ({
             const uploadResponse = await uploadPsdFile(file);
             const message = getMessageFromResponse(uploadResponse);
 
-            await showAlert(message);
+            if (message) await showAlert(message);
+            else
+              await showAlert(
+                "Unknown error occurred while uploading file. (Status code: " +
+                  uploadResponse.statusCode +
+                  ")"
+              );
           }
         }}
       />
