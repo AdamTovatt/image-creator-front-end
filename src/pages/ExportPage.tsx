@@ -87,7 +87,7 @@ const ExportPage: React.FC = () => {
 
     try {
       setCurrentlyExporting(true);
-      const exportResponse = await exportPsdFile(parameters, files);
+      const exportResponse = await exportPsdFile(parameters, files, false);
 
       if (exportResponse.statusCode === 401) {
         navigate("/"); // Redirect to login if unauthorized
@@ -156,6 +156,48 @@ const ExportPage: React.FC = () => {
           />
           <div className="vertical-list">
             <div style={{ minHeight: "1rem" }}></div>
+            <TextButton
+              extraVerticalPadding={0.5}
+              fullWidth={true}
+              text="Generate PSD"
+              onClick={async () => {
+                if (!exportParameters) return;
+                const { files, ...parameters } = exportParameters;
+                try {
+                  setCurrentlyExporting(true);
+                  const exportResponse = await exportPsdFile(
+                    parameters,
+                    files,
+                    true
+                  );
+                  if (exportResponse.success) {
+                    const blob = exportResponse.data!;
+                    const url = URL.createObjectURL(blob);
+                    const anchor = document.createElement("a");
+                    anchor.href = url;
+                    anchor.download = getCorrectFileName(
+                      fileName || "exported-file",
+                      ".psd"
+                    );
+                    anchor.click();
+                    URL.revokeObjectURL(url);
+                  } else {
+                    console.error(
+                      "Export failed:",
+                      exportResponse.error || exportResponse.axiosError
+                    );
+                    await showAlert(
+                      "Export failed, an unexpected error occurred. Check the console log or networks tab for more info."
+                    );
+                  }
+                } catch (error) {
+                  console.error("Error during PSD export:", error);
+                  await showAlert("Error during PSD export: " + error);
+                } finally {
+                  setCurrentlyExporting(false);
+                }
+              }}
+            />
             <TextButton
               extraVerticalPadding={0.5}
               fullWidth={true}

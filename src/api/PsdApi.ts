@@ -35,7 +35,8 @@ export async function updatePsdFile(
 // 3. Export a PSD file with specific parameters
 export async function exportPsdFile(
   parameters: ExportParameters,
-  imageFiles: File[]
+  imageFiles: File[],
+  getAsPsd: boolean
 ): Promise<ApiResponse<Blob, MessageResponse>> {
   const formData = new FormData();
   formData.append("parametersJson", JSON.stringify(parameters));
@@ -46,7 +47,7 @@ export async function exportPsdFile(
 
   return await apiRequest({
     method: "POST",
-    url: "/psd/export-with-parameters",
+    url: `/psd/export-with-parameters?getAsPsd=${getAsPsd.toString()}`,
     data: formData, // Send parameters as FormData
     responseType: "blob",
   });
